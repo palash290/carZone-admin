@@ -1,0 +1,68 @@
+<div class="main-content-wrapper">
+    <div class="ct_top_heading_box">
+        <h4 class="">Edit Profile</h4>
+        <p class="">
+            Update your profile information and account details.
+        </p>
+    </div>
+    <div class="ct_inner_header_bg ct_mt_50 mb-5 ct_px_28">
+        <div class="">
+            <!-- main content come here -->
+            <form [formGroup]="profileForm" action=""
+                class="ct_mt_50 bg-white ct_border_radius_8 ct_box_shadow_25 ct_p_30 ct_576_p_20">
+                <div class="d-flex align-items-center flex-wrap gap-4">
+                    <div class="ct_profile_img">
+                        <img [src]="profileImg ? profileImg : 'img/np_pro.png'" alt="">
+                        <label for="ct_profile_update">
+                            <input type="file" class="d-none" id="ct_profile_update" (change)="onFileSelected($event)"
+                                accept="image/*">
+                            <div class="ct_upload_icon">
+                                <i class="fa-solid fa-camera"></i>
+                            </div>
+                        </label>
+                    </div>
+                    <div>
+                        <h4 class="ct_fs_20 ct_fw_500 mb-0 text-break">{{first_name}}</h4>
+                        <p class="ct_fs_14 mb-0 ct_text_para text-break">{{userEmail}}</p>
+                    </div>
+                </div>
+                <div class="mt-5 row">
+                    <div class="col-lg-6">
+                        <div class="form-group mb-4">
+                            <label for="" class="ct_form_label">Full
+                                Name</label>
+                            <input type="text" class="form-control ct_input ct_fs_14" placeholder="Enter Full Name"
+                                value="Jenny Jhonson" formControlName="first_name" [maxlength]="15">
+
+                            <div *ngIf="profileForm.controls['first_name'].invalid && profileForm.controls['first_name'].touched"
+                                class="err_msg">
+                                <div *ngIf="profileForm.controls['first_name'].errors?.['required']">Please enter
+                                    your first name.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group mb-4">
+                            <label for="" class="ct_form_label">Email Id
+                                <span class="text-grey">(non-editable)</span></label>
+                            <input readonly type="email" class="form-control ct_input ct_fs_14"
+                                placeholder="Enter Email Address" value="jennyjhonsongmail.com">
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+            <div class="d-flex ct_flex_col_575 gap-2 justify-content-end ct_mt_45">
+                <!-- <button class="ct_outline_btn">Cancel</button> -->
+                <!-- <button type="" class="ct_transparent_btn ct_width_100_575">Cancel</button> -->
+                <button class="ct_gradient_btn ct_width_100_575" (click)="onSubmit()">Save Changes</button>
+
+            </div>
+            <!-- end -->
+        </div>
+    </div>
+</div>
+
+<div *ngIf="loading" class="ct_loader_main">
+    <div class="loader"></div>
+</div>

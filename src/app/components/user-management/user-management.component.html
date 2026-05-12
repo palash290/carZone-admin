@@ -1,0 +1,166 @@
+<div class="main-content-wrapper">
+    <div class="ct_top_heading_box">
+        <h4 class="">User Management</h4>
+        <p class="">
+            Manage all users, and monitor their listings and activity.
+        </p>
+    </div>
+    <div class="ct_inner_header_bg ct_mt_50 mb-5 ct_px_28">
+        <div class="">
+            <div class="ct_mt_45">
+                <div class="d-flex justify-content-between align-items-center ct_flex_col_575 gap-sm-5 gap-3">
+                    <!-- Search -->
+                    <div class="search-box ct_width_100_575" style="">
+                        <div class="input-group position-relative">
+                            <input type="text" class="form-control ct_input ps-5" placeholder="Search..." />
+
+                            <i class="fas fa-search ct_show_left ct_text_para"></i>
+                        </div>
+                    </div>
+                    <!-- Filters -->
+                    <div class="dropdown ct_w_100_575">
+                        <button class="btn filter-dropdown dropdown-toggle ct_w_100_575" type="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <svg class="me-2" width="14" height="14" viewBox="0 0 14 14" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M12.5833 0.5H0.5L4.30145 5.25183C4.53787 5.54733 4.66667 5.9145 4.66667 6.293V11.75C4.66667 12.2102 5.03975 12.5833 5.5 12.5833H7.58333C8.04358 12.5833 8.41667 12.2102 8.41667 11.75V6.293C8.41667 5.9145 8.5455 5.54733 8.78192 5.25183L12.5833 0.5Z"
+                                    stroke="#919EAB" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            User Type<svg class="ms-2" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M18 9L12 15L6 9" stroke="#919EAB" stroke-width="1.5" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item">Private</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item"> Company</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="ct_custom_table table-responsive mt-4">
+                    <table class="table mb-0">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>User Name</th>
+                                <th>E-Mail</th>
+                                <th>
+                                    User Type
+                                </th>
+                                <th class="">Date of Joined</th>
+                                <th class="">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Alyvia Kelley</td>
+                                <td>a.kelleygmail.com</td>
+                                <td>Company</td>
+                                <td>06/18/1978</td>
+                                <td class="">
+                                    <div class="actions-cell d-flex gap-2">
+                                        <a routerLink="/home/user-detail" class="btn-icon btn-view">
+
+                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M17.2712 12.7471C17.9796 11.8271 18.3337 11.3662 18.3337 10.0004C18.3337 8.63374 17.9796 8.17457 17.2712 7.25374C15.8571 5.41707 13.4854 3.33374 10.0004 3.33374C6.51541 3.33374 4.14374 5.41707 2.72957 7.25374C2.02124 8.17541 1.66707 8.63457 1.66707 10.0004C1.66707 11.3671 2.02124 11.8262 2.72957 12.7471C4.14374 14.5837 6.51541 16.6671 10.0004 16.6671C13.4854 16.6671 15.8571 14.5837 17.2712 12.7471Z"
+                                                    stroke="#0267EB" stroke-width="1.5" />
+                                                <path
+                                                    d="M7.5 10C7.5 10.663 7.76339 11.2989 8.23223 11.7678C8.70107 12.2366 9.33696 12.5 10 12.5C10.663 12.5 11.2989 12.2366 11.7678 11.7678C12.2366 11.2989 12.5 10.663 12.5 10C12.5 9.33696 12.2366 8.70107 11.7678 8.23223C11.2989 7.76339 10.663 7.5 10 7.5C9.33696 7.5 8.70107 7.76339 8.23223 8.23223C7.76339 8.70107 7.5 9.33696 7.5 10Z"
+                                                    stroke="#0267EB" stroke-width="1.5" />
+                                            </svg>
+                                        </a>
+                                        <button class="btn-icon btn-del">
+                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M9.99996 1.66675C5.39996 1.66675 1.66663 5.40008 1.66663 10.0001C1.66663 14.6001 5.39996 18.3334 9.99996 18.3334C14.6 18.3334 18.3333 14.6001 18.3333 10.0001C18.3333 5.40008 14.6 1.66675 9.99996 1.66675ZM3.33329 10.0001C3.33329 6.31675 6.31663 3.33341 9.99996 3.33341C11.5416 3.33341 12.9583 3.85841 14.0833 4.74175L4.74163 14.0834C3.82632 12.9194 3.33015 11.4808 3.33329 10.0001ZM9.99996 16.6667C8.45829 16.6667 7.04163 16.1417 5.91663 15.2584L15.2583 5.91675C16.1736 7.08074 16.6698 8.51932 16.6666 10.0001C16.6666 13.6834 13.6833 16.6667 9.99996 16.6667Z"
+                                                    fill="#CF0000" />
+                                            </svg>
+
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Alyvia Kelley</td>
+                                <td>a.kelleygmail.com</td>
+                                <td>Private Individual</td>
+                                <td>06/18/1978</td>
+                                <td class="">
+                                    <div class="actions-cell d-flex gap-2">
+                                        <a routerLink="/home/user-detail" class="btn-icon btn-view">
+                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M17.2712 12.7471C17.9796 11.8271 18.3337 11.3662 18.3337 10.0004C18.3337 8.63374 17.9796 8.17457 17.2712 7.25374C15.8571 5.41707 13.4854 3.33374 10.0004 3.33374C6.51541 3.33374 4.14374 5.41707 2.72957 7.25374C2.02124 8.17541 1.66707 8.63457 1.66707 10.0004C1.66707 11.3671 2.02124 11.8262 2.72957 12.7471C4.14374 14.5837 6.51541 16.6671 10.0004 16.6671C13.4854 16.6671 15.8571 14.5837 17.2712 12.7471Z"
+                                                    stroke="#0267EB" stroke-width="1.5" />
+                                                <path
+                                                    d="M7.5 10C7.5 10.663 7.76339 11.2989 8.23223 11.7678C8.70107 12.2366 9.33696 12.5 10 12.5C10.663 12.5 11.2989 12.2366 11.7678 11.7678C12.2366 11.2989 12.5 10.663 12.5 10C12.5 9.33696 12.2366 8.70107 11.7678 8.23223C11.2989 7.76339 10.663 7.5 10 7.5C9.33696 7.5 8.70107 7.76339 8.23223 8.23223C7.76339 8.70107 7.5 9.33696 7.5 10Z"
+                                                    stroke="#0267EB" stroke-width="1.5" />
+                                            </svg>
+                                        </a>
+                                        <button class="btn-icon btn-del">
+                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M9.99996 1.66675C5.39996 1.66675 1.66663 5.40008 1.66663 10.0001C1.66663 14.6001 5.39996 18.3334 9.99996 18.3334C14.6 18.3334 18.3333 14.6001 18.3333 10.0001C18.3333 5.40008 14.6 1.66675 9.99996 1.66675ZM3.33329 10.0001C3.33329 6.31675 6.31663 3.33341 9.99996 3.33341C11.5416 3.33341 12.9583 3.85841 14.0833 4.74175L4.74163 14.0834C3.82632 12.9194 3.33015 11.4808 3.33329 10.0001ZM9.99996 16.6667C8.45829 16.6667 7.04163 16.1417 5.91663 15.2584L15.2583 5.91675C16.1736 7.08074 16.6698 8.51932 16.6666 10.0001C16.6666 13.6834 13.6833 16.6667 9.99996 16.6667Z"
+                                                    fill="#CF0000" />
+                                            </svg>
+
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Alyvia Kelley</td>
+                                <td>a.kelleygmail.com</td>
+                                <td>Private Individual</td>
+                                <td>06/18/1978</td>
+                                <td class="">
+                                    <div class="actions-cell d-flex gap-2">
+                                        <a href="private-user-detail.html" class="btn-icon btn-view">
+
+                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M17.2712 12.7471C17.9796 11.8271 18.3337 11.3662 18.3337 10.0004C18.3337 8.63374 17.9796 8.17457 17.2712 7.25374C15.8571 5.41707 13.4854 3.33374 10.0004 3.33374C6.51541 3.33374 4.14374 5.41707 2.72957 7.25374C2.02124 8.17541 1.66707 8.63457 1.66707 10.0004C1.66707 11.3671 2.02124 11.8262 2.72957 12.7471C4.14374 14.5837 6.51541 16.6671 10.0004 16.6671C13.4854 16.6671 15.8571 14.5837 17.2712 12.7471Z"
+                                                    stroke="#0267EB" stroke-width="1.5" />
+                                                <path
+                                                    d="M7.5 10C7.5 10.663 7.76339 11.2989 8.23223 11.7678C8.70107 12.2366 9.33696 12.5 10 12.5C10.663 12.5 11.2989 12.2366 11.7678 11.7678C12.2366 11.2989 12.5 10.663 12.5 10C12.5 9.33696 12.2366 8.70107 11.7678 8.23223C11.2989 7.76339 10.663 7.5 10 7.5C9.33696 7.5 8.70107 7.76339 8.23223 8.23223C7.76339 8.70107 7.5 9.33696 7.5 10Z"
+                                                    stroke="#0267EB" stroke-width="1.5" />
+                                            </svg>
+
+
+                                        </a>
+                                        <button class="btn-icon btn-del">
+                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M9.99996 1.66675C5.39996 1.66675 1.66663 5.40008 1.66663 10.0001C1.66663 14.6001 5.39996 18.3334 9.99996 18.3334C14.6 18.3334 18.3333 14.6001 18.3333 10.0001C18.3333 5.40008 14.6 1.66675 9.99996 1.66675ZM3.33329 10.0001C3.33329 6.31675 6.31663 3.33341 9.99996 3.33341C11.5416 3.33341 12.9583 3.85841 14.0833 4.74175L4.74163 14.0834C3.82632 12.9194 3.33015 11.4808 3.33329 10.0001ZM9.99996 16.6667C8.45829 16.6667 7.04163 16.1417 5.91663 15.2584L15.2583 5.91675C16.1736 7.08074 16.6698 8.51932 16.6666 10.0001C16.6666 13.6834 13.6833 16.6667 9.99996 16.6667Z"
+                                                    fill="#CF0000" />
+                                            </svg>
+
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- ==== recent seler end ====== -->
+            <!-- end -->
+        </div>
+    </div>
+</div>

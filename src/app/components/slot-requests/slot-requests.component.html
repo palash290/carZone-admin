@@ -1,0 +1,364 @@
+<div class="main-content-wrapper">
+    <div class="ct_top_heading_box">
+        <h4 class=""> Slot Requests</h4>
+        <p class="">
+            Create, edit, and control listing slot plans for sellers.
+        </p>
+    </div>
+    <div class="ct_inner_header_bg ct_mt_50 mb-5 ct_px_28">
+        <div class="">
+            <!-- ==== recent Seller ====== -->
+            <div class="ct_mt_45">
+                <div class="d-flex justify-content-between align-items-center ct_flex_col_575 gap-sm-5 gap-3">
+                    <!-- Search -->
+                    <div class="search-box ct_width_100_575" style="">
+                        <div class="input-group position-relative">
+                            <input type="text" class="form-control ct_input ps-5" placeholder="Search..."
+                                [(ngModel)]="searchQuery" (ngModelChange)="getAllSlots()" />
+                            <i class="fas fa-search ct_show_left ct_text_para"></i>
+                        </div>
+                    </div>
+                    <!-- Filters -->
+                    <div class="dropdown ct_w_100_575">
+                        <select class="form-control ct_input ct_inpu_h_44 ct_input_grey ct_w_100_767"
+                            [(ngModel)]="selectedStatus" (ngModelChange)="getAllSlots()">
+                            <option value="" disabled>Select Status</option>
+                            <option value="ALL">All</option>
+                            <option value="approved">Approved</option>
+                            <option value="pending">Pending</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="ct_custom_table table-responsive mt-4">
+                    <table class="table mb-0">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>
+                                    <span class=""> User Name </span>
+                                </th>
+                                <th>Requested Slots </th>
+                                <th>Description</th>
+                                <th>Date Requested</th>
+                                <th>
+                                    <span class=""> Status</span>
+                                </th>
+                                <th class="">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                *ngFor="let item of filteredData | paginate: { itemsPerPage: 10, currentPage: p }; let i = index">
+                                <td>{{(p - 1) * 10 + i + 1}}</td>
+                                <td>{{item.fullName}}</td>
+                                <td>{{item.requested_slots}}</td>
+                                <td>
+                                    <p class="ct_overlay_text mb-0">{{item.message}}</p>
+                                </td>
+                                <td> {{item.created_at | date:'dd-MM-yyyy'}}</td>
+                                <td>
+                                    <span *ngIf="item.status == 'approved'"
+                                        class="ct_text_green ct_fw_500 text-uppercase">Approved</span>
+                                    <span *ngIf="item.status == 'pending'"
+                                        class="ct_text_yellow ct_fw_500 text-uppercase">Pending</span>
+                                    <span *ngIf="item.status == 'rejected'"
+                                        class="ct_text_red ct_fw_500 text-uppercase">Rejected</span>
+                                </td>
+                                <td class="">
+                                    <div class="actions-cell d-flex gap-2">
+                                        <button data-bs-toggle="modal" data-bs-target="#slotPendingModal"
+                                            class="btn-icon btn-view" (click)="getId(item)">
+                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M17.2712 12.7471C17.9796 11.8271 18.3337 11.3662 18.3337 10.0004C18.3337 8.63374 17.9796 8.17457 17.2712 7.25374C15.8571 5.41707 13.4854 3.33374 10.0004 3.33374C6.51541 3.33374 4.14374 5.41707 2.72957 7.25374C2.02124 8.17541 1.66707 8.63457 1.66707 10.0004C1.66707 11.3671 2.02124 11.8262 2.72957 12.7471C4.14374 14.5837 6.51541 16.6671 10.0004 16.6671C13.4854 16.6671 15.8571 14.5837 17.2712 12.7471Z"
+                                                    stroke="#0267EB" stroke-width="1.5" />
+                                                <path
+                                                    d="M7.5 10C7.5 10.663 7.76339 11.2989 8.23223 11.7678C8.70107 12.2366 9.33696 12.5 10 12.5C10.663 12.5 11.2989 12.2366 11.7678 11.7678C12.2366 11.2989 12.5 10.663 12.5 10C12.5 9.33696 12.2366 8.70107 11.7678 8.23223C11.2989 7.76339 10.663 7.5 10 7.5C9.33696 7.5 8.70107 7.76339 8.23223 8.23223C7.76339 8.70107 7.5 9.33696 7.5 10Z"
+                                                    stroke="#0267EB" stroke-width="1.5" />
+                                            </svg>
+                                        </button>
+                                        @if(item.status == 'pending'){
+                                        <button data-bs-toggle="modal" data-bs-target="#slotApprovedModal"
+                                            class="btn-icon btn-confirm" (click)="getId(item)">
+                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M18.5742 1.91406L19.7559 3.08594L6.66992 16.1816L0.244141 9.75586L1.42578 8.57422L6.66992 13.8184L18.5742 1.91406Z"
+                                                    fill="#00AE65" />
+                                            </svg>
+                                        </button>
+                                        <button data-bs-toggle="modal" data-bs-target="#slotRejectedModal"
+                                            class="btn-icon btn-del" (click)="getId(item)">
+                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M3.33366 16.6666L16.667 3.33325M3.33366 3.33325L16.667 16.6666"
+                                                    stroke="#CF0000" stroke-width="1.66667" stroke-linecap="round" />
+                                            </svg>
+                                        </button>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div *ngIf="data?.length == 0" class="text-center">
+                    <p class="ct_fs_15 mt-5">No data found</p>
+                </div>
+                <!-- Pagination Controls -->
+                <pagination-controls class="ct_pagination_div" *ngIf="!(data?.length == 0)"
+                    (pageChange)="p = $event"></pagination-controls>
+            </div>
+            <!-- ==== recent seler end ====== -->
+            <!-- end -->
+        </div>
+    </div>
+</div>
+
+<!--Schedule Pending modal -->
+<div class="modal fade schedule-detail-modal" id="slotPendingModal" tabindex="-1"
+    aria-labelledby="slotPendingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 540px;">
+        <div class="modal-content">
+            <!-- Header -->
+            <div class="modal-header ct_bg_yellow">
+                <span class="modal-title ct_fs_18 ct_fw_700 text-white ct_font_cairo" id="slotPendingModalLabel">Slot
+                    Requests Detail</span>
+                <!-- Close button — Bootstrap handles this via data-bs-dismiss, no JS needed -->
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <!-- Body -->
+            <div class="modal-body">
+                <!-- User Row -->
+                <div class="user-section d-flex flex-wrap justify-content-between align-items-center gap-3 ct_mb_32">
+                    <div class="d-flex gap-2 align-items-center">
+                        <div class="avatar-placeholder">
+                            <img src="img/user-f.jpg" alt="" class="ct_img_60">
+                        </div>
+                        <div>
+                            <div class="user-name ct_fs_16 ct_fw_600">{{item?.fullName}}</div>
+                            <div class="user-email ct_fs_16 ct_fw_400 ct_text_para">{{item?.email}}</div>
+                        </div>
+                    </div>
+                    <div class="badge-private ct_fs_14 ct_border_radius_8">
+                        <span class="dot ct_dot_primary"></span>
+                        Private Individual
+                    </div>
+                </div>
+                <!-- Requested Slots -->
+                <div class="slots-row mb-3">
+                    <span class="ct_fs_16 ct_fw_600 ct_text_para me-2">
+                        Requested Slots:
+                    </span>
+                    <span class="slots-number ct_fs_30 ct_fw_800">{{item?.requested_slots}}</span>
+                </div>
+                <!-- Description -->
+                <div class="mb-3">
+                    <div class="desc-label ct_fs_16 ct_fw_600 ct_text_para mb-2">Description:</div>
+                    <div class="desc-text ct_max_height_250 ct_custom_scroll pe-2">
+                        {{item?.message}}
+                    </div>
+                </div>
+                <!-- Requested On -->
+                <div class="date-row mb-4">
+                    <span class="ct_fs_16 ct_fw_500 ct_text_para"> Requested On: </span>&nbsp;<span>{{item?.created_at |
+                        date:'dd/MM/yyyy'}}</span>
+                </div>
+            </div>
+            <!-- Footer -->
+            <div class="modal-footer border-0 ct_mb_35">
+                @if(item?.status == 'pending'){
+                <button class="btn btn-status ct_pending">Status: Pending </button>
+                } @else if(item?.status == 'approved') {
+                <button class="btn btn-status ct_approved">Status: Approved </button>
+                <div class="ct_fs_16 ct_fw_500">
+                    <span class="ct_text_para me-1">Approved On:</span>
+                    {{item?.updated_at | date:'dd/MM/yyyy'}}
+                </div>
+                } @else {
+                <button class="btn btn-status ct_rejected">Status: Rejected </button>
+                <div class="ct_fs_16 ct_fw_500">
+                    <span class="ct_text_para me-1">Rejected On:</span>
+                    {{item?.updated_at | date:'dd/MM/yyyy'}}
+                </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- schedule aproved modal -->
+<div class="modal fade schedule-detail-modal" id="slotApprovedModal" tabindex="-1"
+    aria-labelledby="slotApprovedModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 540px;">
+        <div class="modal-content">
+            <!-- Header -->
+            <div class="modal-header ct_bg_green">
+                <span class="modal-title ct_fs_18 ct_fw_700 text-white ct_font_cairo" id="slotApprovedModalLabel">Slot
+                    Requests Detail</span>
+                <!-- Close button — Bootstrap handles this via data-bs-dismiss, no JS needed -->
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <!-- Body -->
+            <div class="modal-body">
+                <!-- User Row -->
+                <div class="user-section d-flex flex-wrap justify-content-between align-items-center gap-3 ct_mb_32">
+                    <div class="d-flex gap-2 align-items-center">
+                        <div class="avatar-placeholder">
+                            <img src="img/user-f.jpg" alt="" class="ct_img_60">
+                        </div>
+                        <div>
+                            <div class="user-name ct_fs_16 ct_fw_600">{{item?.fullName}}</div>
+                            <div class="user-email ct_fs_16 ct_fw_400 ct_text_para">{{item?.email}}</div>
+                        </div>
+                    </div>
+                    <div class="badge-private ct_fs_14 ct_border_radius_8">
+                        <span class="dot ct_dot_primary"></span>
+                        Company
+                    </div>
+                </div>
+                <!-- Requested Slots -->
+                <div class="slots-row mb-3">
+                    <span class="ct_fs_16 ct_fw_600 ct_text_para me-2">
+                        Requested Slots:
+                    </span>
+                    <span class="slots-number ct_fs_30 ct_fw_800">{{item?.requested_slots}}</span>
+                </div>
+                <!-- Description -->
+                <div class="mb-3">
+                    <div class="desc-label ct_fs_16 ct_fw_600 ct_text_para mb-2">Description:</div>
+                    <div class="desc-text ct_max_height_250 ct_custom_scroll pe-2">
+                        {{item?.message}}
+                    </div>
+                </div>
+                <!-- Requested On -->
+                <div class="date-row mb-4">
+                    <span class="ct_fs_16 ct_fw_500 ct_text_para"> Requested On: </span>&nbsp;<span>{{item?.created_at |
+                        date:'dd/MM/yyyy'}}</span>
+                </div>
+
+                <form [formGroup]="form" class="ct_mt_30">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group mb-4">
+                                <label for="" class="mb-2 ct_fw_500 ct_fs_16">Price (CHF) <span
+                                        class="ct_red_text">*</span></label>
+                                <div class="position-relative">
+                                    <input type="text" class="form-control ct_custom_input bg-transparent "
+                                        placeholder="Enter price" formControlName="price">
+                                    <span class="ct_show_eye">CHF</span>
+                                </div>
+                                <div *ngIf="form.controls['price'].invalid && form.controls['price'].touched"
+                                    class="err_msg">
+                                    <div *ngIf="form.controls['price'].errors?.['required']">
+                                        Please enter price.
+                                    </div>
+                                    <div *ngIf="form.controls['price'].errors?.['pattern']">
+                                        Please enter a valid positive number.
+                                    </div>
+                                    <div *ngIf="form.controls['price'].errors?.['min']">
+                                        Price must be greater than 0.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-4">
+                                <label for="" class="mb-2 ct_fw_500 ct_fs_16">Message <span
+                                        class="ct_red_text">*</span></label>
+                                <div class="position-relative">
+                                    <textarea name="" id="" placeholder="Enter message" formControlName="message"
+                                        class="form-control ct_input h-auto" rows="4"></textarea>
+                                </div>
+                                <div *ngIf="form.controls['message'].invalid && form.controls['message'].touched"
+                                    class="err_msg">
+                                    <div *ngIf="form.controls['message'].errors?.['required']">Please enter
+                                        message.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <!-- Footer -->
+            <div class="modal-footer border-0 ct_mb_35">
+                <button class="btn btn-status ct_pending">Status: Pending</button>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-reject" data-bs-dismiss="modal" #closeModalAccept>Cancel</button>
+                    <button (click)="accept()" class="btn btn-approve">Approve</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- schedule rejected modal -->
+<div class="modal fade schedule-detail-modal" id="slotRejectedModal" tabindex="-1"
+    aria-labelledby="slotRejectedModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 540px;">
+        <div class="modal-content">
+            <!-- Header -->
+            <div class="modal-header ct_bg_red">
+                <span class="modal-title ct_fs_18 ct_fw_700 text-white ct_font_cairo" id="slotRejectedModalLabel">Slot
+                    Requests Detail</span>
+                <!-- Close button — Bootstrap handles this via data-bs-dismiss, no JS needed -->
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <!-- Body -->
+            <div class="modal-body">
+                <!-- User Row -->
+                <div class="user-section d-flex flex-wrap justify-content-between align-items-center gap-3 ct_mb_32">
+                    <div class="d-flex gap-2 align-items-center">
+                        <div class="avatar-placeholder">
+                            <img src="img/user-f.jpg" alt="" class="ct_img_60">
+                        </div>
+                        <div>
+                            <div class="user-name ct_fs_16 ct_fw_600">{{item?.fullName}}</div>
+                            <div class="user-email ct_fs_16 ct_fw_400 ct_text_para">{{item?.email}}</div>
+                        </div>
+                    </div>
+                    <div class="badge-private ct_fs_14 ct_border_radius_8">
+                        <span class="dot ct_dot_primary"></span>
+                        Company
+                    </div>
+                </div>
+                <!-- Requested Slots -->
+                <div class="slots-row mb-3">
+                    <span class="ct_fs_16 ct_fw_600 ct_text_para me-2">
+                        Requested Slots:
+                    </span>
+                    <span class="slots-number ct_fs_30 ct_fw_800">{{item?.requested_slots}}</span>
+                </div>
+                <!-- Description -->
+                <div class="mb-3">
+                    <div class="desc-label ct_fs_16 ct_fw_600 ct_text_para mb-2">Description:</div>
+                    <div class="desc-text ct_max_height_250 ct_custom_scroll pe-2">
+                        {{item?.message}}
+                    </div>
+                </div>
+                <!-- Requested On -->
+                <div class="date-row mb-4">
+                    <span class="ct_fs_16 ct_fw_500 ct_text_para"> Requested On: </span>&nbsp;<span>{{item?.created_at |
+                        date:'dd/MM/yyyy'}}</span>
+                </div>
+            </div>
+            <!-- Footer -->
+            <div class="modal-footer border-0 ct_mb_35">
+                <button class="btn btn-status ct_pending">Status: Pending</button>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-approve" data-bs-dismiss="modal" #closeModalReject>Cancel</button>
+                    <button class="btn btn-reject">Reject</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="loading" class="ct_loader_main">
+    <div class="loader"></div>
+</div>

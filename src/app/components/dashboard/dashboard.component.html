@@ -1,0 +1,249 @@
+<div class="main-content-wrapper">
+    <div class="ct_top_heading_box">
+        <h4 class="">Dashboard</h4>
+        <p class="">
+            Monitor platform activity, track performance, and manage key operations in real-time.
+        </p>
+    </div>
+    <div class="ct_inner_header_bg ct_mt_50 mb-5 ct_px_28">
+        <div class="">
+            <!-- main content come here -->
+            <div class="row">
+                <div class="col-xl-5">
+                    <div class="row ">
+                        <div class="col-sm-6 mb-4">
+                            <div class="ct_dashboard_box">
+                                <div class="ct_dashboard_icon_box ct_mb_20">
+                                    <img src="img/total-buyer.gif" alt="" class="ct_img_35">
+                                </div>
+                                <div class="">
+                                    <p class="ct_fs_16 ct_fw_500 ct_text_para mb-1">
+                                        Total Buyers
+                                    </p>
+                                    <h5 class="ct_fw_800 ct_fs_24 mb-0">
+                                        {{totalBuyers}}
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 mb-4">
+                            <div class="ct_dashboard_box">
+                                <div class="ct_dashboard_icon_box ct_mb_20">
+                                    <img src="img/total-seller.gif" alt="" class="ct_img_35">
+                                </div>
+                                <div class="">
+                                    <p class="ct_fs_16 ct_fw_500 ct_text_para mb-1">
+                                        Total Sellers
+                                    </p>
+                                    <h5 class="ct_fw_800 ct_fs_24 mb-0">
+                                        {{totalSellers}}
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 mb-4">
+                            <div class="ct_dashboard_box">
+                                <div class="ct_dashboard_icon_box ct_mb_20">
+                                    <img src="img/active-listing.gif" alt="" class="ct_img_35">
+                                </div>
+                                <div class="">
+                                    <p class="ct_fs_16 ct_fw_500 ct_text_para mb-1">
+                                        Active Listings
+                                    </p>
+                                    <h5 class="ct_fw_800 ct_fs_24 mb-0">
+                                        {{totalActiveCars}}
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 mb-4">
+                            <div class="ct_dashboard_box">
+                                <div class="ct_dashboard_icon_box ct_mb_20">
+                                    <img src="img/slot-request.gif" alt="" class="ct_img_35">
+                                </div>
+                                <div class="">
+                                    <p class="ct_fs_16 ct_fw_500 ct_text_para mb-1">
+                                        Slot Requests
+                                    </p>
+                                    <h5 class="ct_fw_800 ct_fs_24 mb-0">
+                                        0
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-7 mb-4">
+                    <div class="ct_dashboard_box">
+                        <div class="revenue-card">
+                            <div class="card-header-row">
+                                <div>
+                                    <div class="d-flex justify-content-between">
+                                        <div class="card-label ct_fs_16 ct_fw_600 ct_text_para">Revenue Overview</div>
+
+                                        <select class="year-select" [(ngModel)]="selectedRevenueYear">
+                                            <option *ngFor="let year of revenueYears" [value]="year">{{year}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="d-flex gap-3 align-items-center">
+                                        <div class="card-amount ct_fs_20 ct_fw_600">{{revenueAmount}}</div>
+                                        <div class="ct_fs_14 ct_fw_500 ct_text_green">
+                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <circle opacity="0.15" cx="7.96265" cy="7.96265" r="7.96265"
+                                                    fill="#00AE65" />
+                                                <mask id="mask0_5227_3365" style="mask-type:alpha"
+                                                    maskUnits="userSpaceOnUse" x="1" y="1" width="14" height="14">
+                                                    <rect x="1.13745" y="1.13745" width="13.6503" height="13.6503"
+                                                        fill="#22D188" />
+                                                </mask>
+                                                <g mask="url(#mask0_5227_3365)">
+                                                    <path
+                                                        d="M7.39385 11.3751V6.14249L5.34631 8.19003L4.55005 7.39376L7.96261 3.9812L11.3752 7.39376L10.5789 8.19003L8.53137 6.14249V11.3751H7.39385Z"
+                                                        fill="#00AE65" />
+                                                </g>
+                                            </svg>
+                                            {{revenueGrowth}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ct_revenue_chart">
+                                <apx-chart [series]="revenueChartOptions.series" [chart]="revenueChartOptions.chart"
+                                    [xaxis]="revenueChartOptions.xaxis" [yaxis]="revenueChartOptions.yaxis"
+                                    [stroke]="revenueChartOptions.stroke" [fill]="revenueChartOptions.fill"
+                                    [grid]="revenueChartOptions.grid" [markers]="revenueChartOptions.markers"
+                                    [tooltip]="revenueChartOptions.tooltip"
+                                    [dataLabels]="revenueChartOptions.dataLabels"
+                                    [legend]="revenueChartOptions.legend"
+                                    [colors]="revenueChartOptions.colors"></apx-chart>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!--========== recently listed card ========== -->
+            <div class="ct_mt_45">
+
+
+                <div class=" ct_mb_32 d-flex gap-2 justify-content-between ct_flex_col_575">
+                    <div class="">
+                        <h3 class="ct_fs_22 mb-0 ct_fw_600">Recently Listed Cars</h3>
+                    </div>
+                    <div class="">
+                        <a routerLink="/home/car-listing"
+                            class="ct_fs_20 ct_fw_0 ct_text_primary text-decoration-underline text-nowrap">
+                            View all
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 col-12 mb-4" *ngFor="let item of cars; let i = index">
+                        <div class="bg-white ct_p_25 ct_border_radius_8">
+                            <h3 class="ct_text_primary ct_fs_17 ct_fw_600 ct_mb_12">CHF {{item.totalPrice || 0 |
+                                number:'1.2-2'}}</h3>
+                            <div class="ct_recently_list_car_img ct_mb_12">
+                                <img [src]="item.carImages ? item.carImages : 'img/no_car.png'" alt="" class="">
+                            </div>
+                            <h4 class="ct_fs_22 ct_fw_600 mb-2 text-truncate">
+                                {{item.brandName}}
+                            </h4>
+                            <div class="d-flex justify-content-between gap-2 flex-wrap">
+                                <div class="d-flex gap-2 ct_text_para ct_fs_13 align-items-center flex-shirk-0">
+                                    <span class="">
+                                        {{item.selectYear}}
+                                    </span>
+                                    <div class="d-flex gap-2 align-items-center">
+                                        <span class="dot ct_dot_grey"></span>
+                                        <span class="">
+                                            {{item?.carMileage ? item?.carMileage : '0'}} km
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="ct_text_para ct_fs_13">
+                                    {{item?.location ? item?.location : '-'}}
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--========== recently listed card end ========== -->
+
+
+
+            <!-- ==== recent Seller ====== -->
+            <div class="ct_mt_45">
+
+
+                <div class=" ct_mb_32 d-flex gap-2 justify-content-between align-items-center ct_flex_col_575">
+                    <div class="">
+                        <h3 class="ct_fs_22 mb-0 ct_fw_600">Recent Sellers </h3>
+                    </div>
+                    <div class="">
+                        <a routerLink="/home/user-management"
+                            class="ct_fs_20 ct_fw_0 ct_text_primary text-decoration-underline text-nowrap">
+                            View all
+                        </a>
+                    </div>
+                </div>
+                <div class="ct_custom_table table-responsive">
+                    <table class="table mb-0">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Seller Name</th>
+                                <th>Seller Type</th>
+                                <th>Phone No.</th>
+                                <th>Email Id</th>
+                                <!-- <th class="">Actions</th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of sellers; let i = index">
+                                <td>{{i+1}}</td>
+                                <td>{{item?.fullName}}</td>
+                                <td *ngIf="item?.seller_type == 'personal'">Private</td>
+                                <td *ngIf="item?.seller_type == 'business'">Official</td>
+                                <td>{{item?.phoneNumber}}</td>
+                                <td>{{item?.email}}</td>
+                                <!-- <td class="">
+                                    <div class="actions-cell d-flex gap-2">
+                                        <a class="btn-icon btn-view">
+                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M17.2712 12.7471C17.9796 11.8271 18.3337 11.3662 18.3337 10.0004C18.3337 8.63374 17.9796 8.17457 17.2712 7.25374C15.8571 5.41707 13.4854 3.33374 10.0004 3.33374C6.51541 3.33374 4.14374 5.41707 2.72957 7.25374C2.02124 8.17541 1.66707 8.63457 1.66707 10.0004C1.66707 11.3671 2.02124 11.8262 2.72957 12.7471C4.14374 14.5837 6.51541 16.6671 10.0004 16.6671C13.4854 16.6671 15.8571 14.5837 17.2712 12.7471Z"
+                                                    stroke="#0267EB" stroke-width="1.5" />
+                                                <path
+                                                    d="M7.5 10C7.5 10.663 7.76339 11.2989 8.23223 11.7678C8.70107 12.2366 9.33696 12.5 10 12.5C10.663 12.5 11.2989 12.2366 11.7678 11.7678C12.2366 11.2989 12.5 10.663 12.5 10C12.5 9.33696 12.2366 8.70107 11.7678 8.23223C11.2989 7.76339 10.663 7.5 10 7.5C9.33696 7.5 8.70107 7.76339 8.23223 8.23223C7.76339 8.70107 7.5 9.33696 7.5 10Z"
+                                                    stroke="#0267EB" stroke-width="1.5" />
+                                            </svg>
+                                        </a>
+                                        <button class="btn-icon btn-del">
+                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M9.99996 1.66675C5.39996 1.66675 1.66663 5.40008 1.66663 10.0001C1.66663 14.6001 5.39996 18.3334 9.99996 18.3334C14.6 18.3334 18.3333 14.6001 18.3333 10.0001C18.3333 5.40008 14.6 1.66675 9.99996 1.66675ZM3.33329 10.0001C3.33329 6.31675 6.31663 3.33341 9.99996 3.33341C11.5416 3.33341 12.9583 3.85841 14.0833 4.74175L4.74163 14.0834C3.82632 12.9194 3.33015 11.4808 3.33329 10.0001ZM9.99996 16.6667C8.45829 16.6667 7.04163 16.1417 5.91663 15.2584L15.2583 5.91675C16.1736 7.08074 16.6698 8.51932 16.6666 10.0001C16.6666 13.6834 13.6833 16.6667 9.99996 16.6667Z"
+                                                    fill="#CF0000" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td> -->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <!-- ==== recent seler end ====== -->
+
+
+            <!-- end -->
+        </div>
+    </div>
+</div>

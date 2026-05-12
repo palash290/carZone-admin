@@ -1,0 +1,89 @@
+@media (max-width: 991px) {
+  .login-wrapper .left-panel {
+    display: none;
+  }
+
+  .login-wrapper .right-panel {
+    flex: 1;
+  }
+
+  .login-wrapper .right-inner {
+    padding: 2rem 1.8rem;
+    align-items: flex-start;
+    padding-top: 3rem;
+  }
+
+  .login-wrapper .form-area {
+    max-width: 100%;
+  }
+
+  .ct_side_bar {
+    left: -100%;
+    padding-top: 40px;
+  }
+
+  .ct_show .ct_side_bar {
+    left: 0px;
+    z-index: 99;
+  }
+
+  .ct_close_sidebar {
+    position: absolute;
+    display: block;
+    right: 15px;
+    top: 0px;
+    font-size: 22px;
+    transition: 0.4s ease all;
+    color: #fff;
+  }
+
+  .ct_close_sidebar:hover {
+    transform: rotate(360deg);
+  }
+
+  .ct_right_panel {
+    margin-left: 0px;
+    width: 100%;
+  }
+
+  .ct_menu_bar {
+    display: block;
+  }
+}
+
+
+@media (max-width:767px){
+  .ct_flex_col_767{
+   flex-direction: column;
+            align-items: start !important;
+  }
+  .ct_w_100_767{
+    width: 100% !important;
+  }
+  .seller_detail_team_box {
+
+  padding: 20px;
+}
+
+.flex_grow_767{
+  flex-grow: 1;
+}
+}
+@media (max-width:575px){
+         .ct_flex_col_575{
+            flex-direction: column;
+            align-items: start !important;
+      }
+      .ct_width_100_575{
+        width: 100%;
+      }
+      .ct_p_24_575_20{
+        padding: 20px;
+      }
+         .ct_w_100_575{
+            width: 100%;
+      }
+      .ct_576_p_20{
+        padding: 20px;
+      }
+}

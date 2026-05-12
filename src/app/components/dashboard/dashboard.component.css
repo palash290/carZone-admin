@@ -1,0 +1,8 @@
+.ct_revenue_chart {
+  margin-top: 12px;
+}
+
+.ct_revenue_chart apx-chart {
+  display: block;
+  width: 100%;
+}

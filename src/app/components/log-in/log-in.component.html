@@ -1,0 +1,70 @@
+<div class="login-wrapper">
+      <!-- LEFT PANEL (hidden on mobile/tablet via Bootstrap + CSS) -->
+      <div class="left-panel d-none d-lg-block">
+            <!-- Using a high-quality red car placeholder via Unsplash -->
+            <img class="car-img" src="img/login.png" alt="Red sports car" />
+            <p class="tagline">Manage Smarter. Operate Seamlessly.<br>Everything in One Place</p>
+      </div>
+      <!-- RIGHT PANEL -->
+      <div class="right-panel">
+            <div class="right-inner">
+                  <div class="form-area">
+                        <!-- Logo -->
+                        <div class="logo-wrap mb-5">
+                              <img src="img/logo.png" alt="" class="">
+                        </div>
+                        <!-- Heading -->
+                        <h1 class="heading ct_fs_45 ct_fw_400 ct_font_cairo text-white mb-1">Welcome back</h1>
+                        <p class="sub-heading text-white ct_fs_16 ct_mb_32">We've missed you! Please sign in to catch
+                              up<br class="d-none d-sm-inline"> on what you've missed</p>
+                        <!-- Form -->
+                        <form [formGroup]="loginForm" class="">
+                              <div class="ct_mb_32">
+                                    <label class="form-label mb-2 text-white" for="email">Email</label>
+                                    <input type="email" id="email" class="form-control ct_login_input"
+                                          placeholder="Enter your email" autocomplete="email" formControlName="email" />
+                                    <div *ngIf="loginForm.controls['email'].invalid && loginForm.controls['email'].touched"
+                                          class="err_msg">
+                                          <div *ngIf="loginForm.controls['email'].errors?.['required']"
+                                                class="ct_fs_14 mt-1">
+                                                Email is required.
+                                          </div>
+                                          <div *ngIf="loginForm.controls['email'].errors?.['email'] && !loginForm.controls['email'].errors?.['required']"
+                                                class="ct_fs_14 mt-1">
+                                                Invalid email format.</div>
+                                    </div>
+                              </div>
+                              <div class="mb-3">
+                                    <label class="form-label mb-2 text-white" for="password">Password</label>
+                                    <div class="position-relative">
+                                          <input type="{{ isPasswordVisible ? 'text' : 'password' }}" id="password"
+                                                class="form-control ct_login_input ct_pe_40"
+                                                placeholder="Enter your password" autocomplete="current-password"
+                                                formControlName="password" />
+                                          <i class="fa-solid ct_show_eye text-white" style="cursor: pointer;"
+                                                [ngClass]="isPasswordVisible ? 'fa-eye' : 'fa-eye-slash'"
+                                                (click)="togglePasswordVisibility()"></i>
+                                    </div>
+                                    <div *ngIf="loginForm.controls['password'].invalid && loginForm.controls['password'].touched"
+                                          class="err_msg">
+                                          <div *ngIf="loginForm.controls['password'].errors?.['required']"
+                                                class="ct_fs_14 mt-1">
+                                                Password is
+                                                required.</div>
+                                    </div>
+                              </div>
+                              <div routerLink="/forgot-password" class="text-end">
+                                    <a class="forgot-link ct_fs_14 text-white">Forgot
+                                          Password?</a>
+                              </div>
+                        </form>
+                        <a (click)="loginAndFetchData()" class="btn-signin ct_mt_35" routerLink="/home/dashboard">Sign
+                              In</a>
+                  </div>
+            </div>
+      </div>
+</div>
+
+<div *ngIf="loading" class="ct_loader_main">
+      <div class="loader"></div>
+</div>

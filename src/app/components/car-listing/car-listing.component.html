@@ -1,0 +1,184 @@
+<div class="main-content-wrapper">
+    <div class="ct_top_heading_box">
+        <h4 class="">Car Listings</h4>
+        <p class="">
+            Manage, review, and control all vehicle listings across the platform.
+        </p>
+    </div>
+    <div class="ct_inner_header_bg ct_mt_50 mb-5 ct_px_28">
+        <div class="">
+            <!-- ==== recent Seller ====== -->
+            <div class="ct_mt_45">
+                <div class="d-flex justify-content-between align-items-center ct_flex_col_767 gap-md-5 gap-3">
+                    <!-- Search -->
+                    <div class="search-box  ct_w_100_767" style="">
+                        <div class="input-group position-relative">
+                            <input type="text" class="form-control ct_input ps-5" placeholder="Search..."
+                                [(ngModel)]="searchQuery" (ngModelChange)="getBuseSchedule()" />
+                            <i class="fas fa-search ct_show_left ct_text_para"></i>
+                        </div>
+                    </div>
+                    <div class="d-sm-flex w-100 gap-2 justify-content-end">
+                        <!-- Filters -->
+                        <div class="dropdown ct_w_100_575 w-100 d-flex mb-sm-0 mb-3 flex_grow_767">
+                            <select class="form-control ct_input ct_inpu_h_44 ct_input_grey ct_w_100_767"
+                                [(ngModel)]="status" (ngModelChange)="getBuseSchedule()">
+                                <option disabled value="">Filter by Status</option>
+                                <option value="">All</option>
+                                <option value="1">Active</option>
+                                <option value="0">Expired</option>
+                            </select>
+                        </div>
+                        <div class="dropdown ct_w_100_575 w-100 d-flex flex_grow_767">
+                            <input type="date" class="form-control ct_input ct_inpu_h_44 ct_input_grey ct_w_100_767"
+                                [(ngModel)]="date" (ngModelChange)="getBuseSchedule()">
+                        </div>
+                    </div>
+                </div>
+                <div class="ct_custom_table table-responsive mt-4">
+                    <table class="table mb-0">
+                        <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>Car Name</th>
+                                <th>Brand Name</th>
+                                <th>Price (CHF)</th>
+                                <th>Listed On</th>
+                                <!-- <th>Car Image</th> -->
+                                <th>Leasing</th>
+                                <th>Leasing Price</th>
+                                <th>Status</th>
+                                <th>MFK Car Status</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                *ngFor="let item of data | paginate: { itemsPerPage: 10, currentPage: p }; let i = index">
+                                <td>{{(p - 1) * 10 + i + 1}}</td>
+                                <td>{{item.carModel ? item.carModel : '-'}}</td>
+                                <td>{{item.brandName ? item.brandName : '-'}}</td>
+                                <td>{{item.totalPrice | number:'1.2-2'}} CHF</td>
+                                <td>{{item.createdAt | date:'dd-MM-yyyy'}}</td>
+                                <!-- <td>
+                                    @if(item.carImages?.length){
+                                    <img [src]="item.carImages[0]" alt="Car Image" class="ct_img_w_130"
+                                        data-bs-toggle="modal" data-bs-target="#full_view_img" />
+                                    } @else {
+                                    <img [src]="'img/no_car.png'" alt="Car Image" class="ct_img_w_130"
+                                        data-bs-toggle="modal" data-bs-target="#full_view_img" />
+                                    }
+                                </td> -->
+                                <td>
+                                    <span *ngIf="item.isLeasing == 1" class="">Rental</span>
+                                    <span *ngIf="item.isLeasing == 0" class="">Non-Rental</span>
+                                </td>
+                                <td>
+                                    <span *ngIf="item.isLeasing == 1" class="">{{item.leasingPrice | number:'1.2-2'}}
+                                        CHF</span>
+                                    <span *ngIf="item.isLeasing == 0" class="">-</span>
+                                </td>
+                                <td>
+                                    <span *ngIf="item.is_active == 1" class="ct_green_text">Active</span>
+                                    <span *ngIf="item.is_active == 0" class="ct_red_text">Expired</span>
+                                </td>
+                                <!-- <td>
+                                <select [(ngModel)]="item.mfk_status_override" class="form-select"
+                                    (change)="onEmfStatusChange(item.id, item.mfk_status_override)">
+                                    <option value=null selected disabled>Select</option>
+                                    <option value="valid">Valid</option>
+                                    <option value="due_soon">Due Soon</option>
+                                    <option value="overdue">Overdue</option>
+                                    <option value="no_data">No Data</option>
+                                </select>
+                            </td> -->
+                                @if(item.mfk_status_override == null) {
+                                <td>
+                                    <select [(ngModel)]="item.mfk_status" class="form-select w-auto"
+                                        (change)="onEmfStatusChange(item.id, item.mfk_status, item.mfk_status)">
+                                        <option [ngValue]="null" selected disabled>Select</option>
+                                        <option value="valid">Valid</option>
+                                        <option value="due_soon">Due Soon</option>
+                                        <option value="overdue">Overdue</option>
+                                        <option value="no_data">No Data</option>
+                                    </select>
+                                </td>
+                                } @else {
+                                <td>
+                                    <select [(ngModel)]="item.mfk_status_override" class="form-select w-auto"
+                                        (change)="onEmfStatusChange(item.id, item.mfk_status_override, item.mfk_status)">
+                                        <option [ngValue]="null" selected disabled>Select</option>
+                                        <option value="valid">Valid</option>
+                                        <option value="due_soon">Due Soon</option>
+                                        <option value="overdue">Overdue</option>
+                                        <option value="no_data">No Data</option>
+                                    </select>
+                                </td>
+                                }
+                                <td class="text-end">
+                                    <a [routerLink]="['/home/car-detail']" [queryParams]="{ id: item.id }"
+                                        class="ct_grey_text"><i class="fa-regular fa-eye"></i></a>
+                                </td>
+                            </tr>
+                            <!-- <tr>
+                                <td>2</td>
+                                <td>Jeep Compass</td>
+                                <td>Alyvia Kelley</td>
+                                <td>Company</td>
+                                <td> CHF 122.–</td>
+                                <td><span class="ct_text_red ct_fw_500 text-uppercase">sold</span></td>
+                                <td class="">
+                                    <div class="actions-cell d-flex gap-2">
+                                        <a href="car-listing-detail.html" class="btn-icon btn-view">
+
+                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M17.2712 12.7471C17.9796 11.8271 18.3337 11.3662 18.3337 10.0004C18.3337 8.63374 17.9796 8.17457 17.2712 7.25374C15.8571 5.41707 13.4854 3.33374 10.0004 3.33374C6.51541 3.33374 4.14374 5.41707 2.72957 7.25374C2.02124 8.17541 1.66707 8.63457 1.66707 10.0004C1.66707 11.3671 2.02124 11.8262 2.72957 12.7471C4.14374 14.5837 6.51541 16.6671 10.0004 16.6671C13.4854 16.6671 15.8571 14.5837 17.2712 12.7471Z"
+                                                    stroke="#0267EB" stroke-width="1.5" />
+                                                <path
+                                                    d="M7.5 10C7.5 10.663 7.76339 11.2989 8.23223 11.7678C8.70107 12.2366 9.33696 12.5 10 12.5C10.663 12.5 11.2989 12.2366 11.7678 11.7678C12.2366 11.2989 12.5 10.663 12.5 10C12.5 9.33696 12.2366 8.70107 11.7678 8.23223C11.2989 7.76339 10.663 7.5 10 7.5C9.33696 7.5 8.70107 7.76339 8.23223 8.23223C7.76339 8.70107 7.5 9.33696 7.5 10Z"
+                                                    stroke="#0267EB" stroke-width="1.5" />
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Tata Nexon</td>
+                                <td>Alyvia Kelley</td>
+                                <td>Private Individual </td>
+                                <td> CHF 122.–</td>
+                                <td><span class="ct_text_green ct_fw_500 text-uppercase">Available</span></td>
+                                <td class="">
+                                    <div class="actions-cell d-flex gap-2">
+                                        <a href="car-listing-detail.html" class="btn-icon btn-view">
+
+                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M17.2712 12.7471C17.9796 11.8271 18.3337 11.3662 18.3337 10.0004C18.3337 8.63374 17.9796 8.17457 17.2712 7.25374C15.8571 5.41707 13.4854 3.33374 10.0004 3.33374C6.51541 3.33374 4.14374 5.41707 2.72957 7.25374C2.02124 8.17541 1.66707 8.63457 1.66707 10.0004C1.66707 11.3671 2.02124 11.8262 2.72957 12.7471C4.14374 14.5837 6.51541 16.6671 10.0004 16.6671C13.4854 16.6671 15.8571 14.5837 17.2712 12.7471Z"
+                                                    stroke="#0267EB" stroke-width="1.5" />
+                                                <path
+                                                    d="M7.5 10C7.5 10.663 7.76339 11.2989 8.23223 11.7678C8.70107 12.2366 9.33696 12.5 10 12.5C10.663 12.5 11.2989 12.2366 11.7678 11.7678C12.2366 11.2989 12.5 10.663 12.5 10C12.5 9.33696 12.2366 8.70107 11.7678 8.23223C11.2989 7.76339 10.663 7.5 10 7.5C9.33696 7.5 8.70107 7.76339 8.23223 8.23223C7.76339 8.70107 7.5 9.33696 7.5 10Z"
+                                                    stroke="#0267EB" stroke-width="1.5" />
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+                <div *ngIf="data?.length == 0" class="text-center">
+                    <p class="ct_fs_15 mt-5">No cars found</p>
+                </div>
+                <!-- Pagination Controls -->
+                <pagination-controls class="ct_pagination_div" *ngIf="!(data?.length == 0)"
+                    (pageChange)="p = $event"></pagination-controls>
+            </div>
+            <!-- ==== recent seler end ====== -->
+            <!-- end -->
+        </div>
+    </div>
