@@ -24,6 +24,14 @@ export const routes: Routes = [
                         loadComponent: () => import('./components/user-management/user-management.component').then(m => m.UserManagementComponent)
                   },
                   {
+                        path: 'private',
+                        loadComponent: () => import('./components/user-management/private/private.component').then(m => m.PrivateComponent)
+                  },
+                  {
+                        path: 'company',
+                        loadComponent: () => import('./components/user-management/company/company.component').then(m => m.CompanyComponent)
+                  },
+                  {
                         path: 'user-detail',
                         loadComponent: () => import('./components/user-management/user-detail/user-detail.component').then(m => m.UserDetailComponent)
                   },
