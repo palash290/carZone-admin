@@ -94,7 +94,11 @@ export const routes: Routes = [
                   {
                         path: 'change-password',
                         loadComponent: () => import('./components/change-password/change-password.component').then(m => m.ChangePasswordComponent)
-                  }
+                  },
+                  {
+                        path: 'transactions',
+                        loadComponent: () => import('./components/transactions/transactions.component').then(m => m.TransactionsComponent)
+                  },
             ]
       }
 ];

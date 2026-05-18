@@ -13,13 +13,13 @@
                     <div class="search-box ct_width_100_575" style="">
                         <div class="input-group position-relative">
                             <input type="text" class="form-control ct_input ps-5" placeholder="Search..."
-                                [(ngModel)]="searchQuery" (ngModelChange)="getBuseSchedule()" />
+                                [(ngModel)]="searchQuery" (ngModelChange)="getCompanyList()" />
                             <i class="fas fa-search ct_show_left ct_text_para"></i>
                         </div>
                     </div>
                     <div class="dropdown ct_w_100_575">
                         <select class="form-control ct_input ct_inpu_h_44 ct_input_grey ct_w_100_575"
-                            [(ngModel)]="status" (ngModelChange)="getBuseSchedule()">
+                            [(ngModel)]="status" (ngModelChange)="getCompanyList()">
                             <option value="">Status: All</option>
                             <option value="0">Pending</option>
                             <option value="1">Approved</option>
@@ -36,6 +36,7 @@
                                 <th>E-Mail</th>
                                 <th>User Type</th>
                                 <th>Status</th>
+                                <th>Block</th>
                                 <th class="">Date of Joined</th>
                                 <th class="">Actions</th>
                             </tr>
@@ -54,6 +55,13 @@
                                         class="ct_text_yellow ct_fw_500 text-uppercase">Pending</span>
                                     <span *ngIf="item.is_activated == '2'"
                                         class="ct_text_red ct_fw_500 text-uppercase">Rejected</span>
+                                </td>
+                                <td>
+                                    <div class="form-check form-switch ct_custom_switch">
+                                        <input class="form-check-input" type="checkbox" role="switch"
+                                            id="flexSwitchCheckChecked" [(ngModel)]="item.isBlocked"
+                                            [ngModel]="item.isBlocked == 1" (click)="handleCheckboxChange(item)">
+                                    </div>
                                 </td>
                                 <td>{{item.createdAt | date:'MM/dd/yyyy'}}</td>
                                 <td class="">
@@ -79,8 +87,8 @@
                                             </svg>
                                         </button> -->
                                         @if(item.is_activated == '0'){
-                                        <button (click)="getId(item)" data-bs-toggle="modal" data-bs-target="#userApprovedModal"
-                                            class="btn-icon btn-confirm">
+                                        <button (click)="getId(item)" data-bs-toggle="modal"
+                                            data-bs-target="#userApprovedModal" class="btn-icon btn-confirm">
                                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <path
@@ -88,8 +96,8 @@
                                                     fill="#00AE65" />
                                             </svg>
                                         </button>
-                                        <button (click)="getId(item)" data-bs-toggle="modal" data-bs-target="#userRejectedModal"
-                                            class="btn-icon btn-del">
+                                        <button (click)="getId(item)" data-bs-toggle="modal"
+                                            data-bs-target="#userRejectedModal" class="btn-icon btn-del">
                                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M3.33366 16.6666L16.667 3.33325M3.33366 3.33325L16.667 16.6666"
@@ -165,7 +173,7 @@
                     </table>
                 </div>
                 <div *ngIf="data?.length == 0" class="text-center">
-                    <p class="ct_fs_15 mt-5">No user found</p>
+                    <p class="ct_fs_15 mt-5">No company found</p>
                 </div>
                 <!-- Pagination Controls -->
                 <pagination-controls class="ct_pagination_div" *ngIf="!(data?.length == 0)"
@@ -238,5 +246,5 @@
 </div>
 
 <div *ngIf="loading" class="ct_loader_main">
-      <div class="loader"></div>
+    <div class="loader"></div>
 </div>

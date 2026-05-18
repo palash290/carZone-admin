@@ -40,49 +40,63 @@ export class PrivateComponent {
     });
   }
 
-  onEmfStatusChange(id: any, overrideStatus: string | null, originalStatus?: string): void {
-    const statusToUse = overrideStatus || originalStatus;
-
-    if (!statusToUse) {
-      this.toastr.warning('Please select a valid status');
-      return;
+  handleCheckboxChange(row: any) {
+    if (row.isBlocked == 1) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You want to unblock this buyer!",
+        icon: "success",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes!",
+        cancelButtonText: "No"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const formURlData = new URLSearchParams();
+          //console.log()
+          formURlData.set('user_id', row.id);
+          formURlData.set('role', 'buyer');
+          formURlData.set('isBlocked', '0');
+          this.service.post(`blocked1`, formURlData).subscribe({
+            next: (resp: any) => {
+              this.toastr.success(resp.message);
+              this.getAllPrivate();
+            }
+          })
+        } else {
+          //this.toastr.warning('Something went wrong!');
+          this.getAllPrivate();
+        }
+      });
+    } else {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You want to block this buyer!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes!",
+        cancelButtonText: "No"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const formURlData = new URLSearchParams();
+          formURlData.set('user_id', row.id);
+          formURlData.set('role', 'buyer');
+          formURlData.set('isBlocked', '1');
+          this.service.post(`blocked1`, formURlData).subscribe({
+            next: (resp: any) => {
+              this.toastr.success(resp.message);
+              this.getAllPrivate();
+            }
+          })
+        } else {
+          //this.toastr.warning('Something went wrong!');
+          this.getAllPrivate();
+        }
+      });
     }
-
-    const statusLabels: any = {
-      valid: 'Valid',
-      due_soon: 'Due Soon',
-      overdue: 'Overdue',
-      no_data: 'No Data'
-    };
-
-    Swal.fire({
-      title: 'Are you sure?',
-      text: `You want to change MFK Car Status to "${statusLabels[statusToUse]}"?`,
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes!',
-      cancelButtonText: 'No'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const formURlData = new URLSearchParams()
-        formURlData.set('id', id)
-        formURlData.set('status', statusToUse)
-
-        this.service.put('changeMfkCarStatus', formURlData.toString()).subscribe({
-          next: (resp: any) => {
-            this.toastr.success(resp.message || 'Status updated successfully!');
-          },
-          error: (err) => {
-            this.toastr.warning('Failed to update MFK Car Status');
-          }
-        });
-      } else {
-        this.getAllPrivate();
-        this.toastr.warning('Action cancelled');
-      }
-    });
   }
 
 

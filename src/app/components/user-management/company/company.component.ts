@@ -26,12 +26,12 @@ export class CompanyComponent {
   constructor(private service: CommonService, private toastr: NzMessageService) { }
 
   ngOnInit() {
-    this.getBuseSchedule();
+    this.getCompanyList();
   }
 
   data: any;
 
-  getBuseSchedule() {
+  getCompanyList() {
     const trimmedSearch = this.searchQuery?.trim() || '';
     this.service.get(`getAllCompanyAccounts?search=${trimmedSearch}&createdAt=${this.date}&is_activated=${this.status}`).subscribe({
 
@@ -44,51 +44,6 @@ export class CompanyComponent {
     });
   }
 
-  onEmfStatusChange(id: any, overrideStatus: string | null, originalStatus?: string): void {
-    const statusToUse = overrideStatus || originalStatus;
-
-    if (!statusToUse) {
-      this.toastr.warning('Please select a valid status');
-      return;
-    }
-
-    const statusLabels: any = {
-      valid: 'Valid',
-      due_soon: 'Due Soon',
-      overdue: 'Overdue',
-      no_data: 'No Data'
-    };
-
-    Swal.fire({
-      title: 'Are you sure?',
-      text: `You want to change MFK Car Status to "${statusLabels[statusToUse]}"?`,
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes!',
-      cancelButtonText: 'No'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const formURlData = new URLSearchParams()
-        formURlData.set('id', id)
-        formURlData.set('status', statusToUse)
-
-        this.service.put('changeMfkCarStatus', formURlData.toString()).subscribe({
-          next: (resp: any) => {
-            this.toastr.success(resp.message || 'Status updated successfully!');
-          },
-          error: (err) => {
-            this.toastr.warning('Failed to update MFK Car Status');
-          }
-        });
-      } else {
-        this.getBuseSchedule();
-        this.toastr.warning('Action cancelled');
-      }
-    });
-  }
-
   accept() {
     this.loading = true;
     this.service.post(`approveCompany/${this.companyId}`, '').subscribe({
@@ -96,7 +51,7 @@ export class CompanyComponent {
         if (resp.success == true) {
           this.toastr.success(resp.message);
           this.loading = false;
-          this.getBuseSchedule();
+          this.getCompanyList();
           this.closeModalAccept.nativeElement.click();
         } else {
           this.toastr.warning(resp.message);
@@ -124,7 +79,7 @@ export class CompanyComponent {
         if (resp.success == true) {
           this.toastr.success(resp.message);
           this.loading = false;
-          this.getBuseSchedule();
+          this.getCompanyList();
           this.closeModalReject.nativeElement.click();
         } else {
           this.toastr.warning(resp.message);
@@ -148,6 +103,65 @@ export class CompanyComponent {
     // this.item = item;
     this.companyId = item.id;
   }
+
+    handleCheckboxChange(row: any) {
+      if (row.isBlocked == 1) {
+        Swal.fire({
+          title: "Are you sure?",
+          text: "You want to unblock this buyer!",
+          icon: "success",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes!",
+          cancelButtonText: "No"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            const formURlData = new URLSearchParams();
+            //console.log()
+            formURlData.set('user_id', row.id);
+            formURlData.set('role', 'buyer');
+            formURlData.set('isBlocked', '0');
+            this.service.post(`blocked1`, formURlData).subscribe({
+              next: (resp: any) => {
+                this.toastr.success(resp.message);
+                this.getCompanyList();
+              }
+            })
+          } else {
+            //this.toastr.warning('Something went wrong!');
+            this.getCompanyList();
+          }
+        });
+      } else {
+        Swal.fire({
+          title: "Are you sure?",
+          text: "You want to block this buyer!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes!",
+          cancelButtonText: "No"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            const formURlData = new URLSearchParams();
+            formURlData.set('user_id', row.id);
+            formURlData.set('role', 'buyer');
+            formURlData.set('isBlocked', '1');
+            this.service.post(`blocked1`, formURlData).subscribe({
+              next: (resp: any) => {
+                this.toastr.success(resp.message);
+                this.getCompanyList();
+              }
+            })
+          } else {
+            //this.toastr.warning('Something went wrong!');
+            this.getCompanyList();
+          }
+        });
+      }
+    }
 
 
 }
