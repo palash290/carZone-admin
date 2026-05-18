@@ -36,12 +36,25 @@ export class CarDetailComponent {
   carData: any;
   images: any[] = [];
 
+  readonly statusLabelMap: Record<string, string> = {
+    valid: 'Valid',
+    due_soon: 'Due Soon',
+    overdue: 'Overdue',
+    no_data: 'No Data'
+  };
+
+  readonly conditionLabelMap: Record<string, string> = {
+    '1': 'New',
+    '2': 'Used'
+  };
+
   getBuseSchedule(carId: any) {
     this.service.get(`fetchCarById?id=${carId}`).subscribe({
       next: (resp: any) => {
         this.carData = resp.data;
 
-        this.images = resp.data.carImages.length > 0 ? resp.data.carImages : ['img/no_car.png'];
+        const carImages = Array.isArray(resp.data?.carImages) ? resp.data.carImages : [];
+        this.images = carImages.length > 0 ? carImages : ['img/no_car.png'];
 
         const features = resp.data.carFeatures ? resp.data.carFeatures : [];
         this.carFeaturesList = features?.split(',').map((f: string) => f.trim());
@@ -56,13 +69,22 @@ export class CarDetailComponent {
   ngAfterViewInit() {
     // Wait for DOM and Swiper setup
     setTimeout(() => {
-      this.thumbsSwiper = new Swiper('.mySwiperThumbs', {
-        spaceBetween: 10,
-        slidesPerView: 4,
-        watchSlidesProgress: true,
-        slideToClickedSlide: true,
-        loop: false
-      });
+      const thumbsElement = document.querySelector('.mySwiperThumbs');
+      const mainElement = document.querySelector('.mySwiperMain');
+
+      if (!mainElement) {
+        return;
+      }
+
+      if (thumbsElement) {
+        this.thumbsSwiper = new Swiper('.mySwiperThumbs', {
+          spaceBetween: 10,
+          slidesPerView: 4,
+          watchSlidesProgress: true,
+          slideToClickedSlide: true,
+          loop: false
+        });
+      }
 
       new Swiper('.mySwiperMain', {
         spaceBetween: 10,
@@ -71,15 +93,69 @@ export class CarDetailComponent {
           nextEl: '.swiper-button-next',
           prevEl: '.swiper-button-prev',
         },
-        thumbs: {
+        thumbs: this.thumbsSwiper ? {
           swiper: this.thumbsSwiper,
-        },
+        } : undefined,
       });
     }, 2000); // or use ngZone.runOutsideAngular if needed
   }
 
   backClicked() {
     this.location.back();
+  }
+
+  formatValue(value: any, suffix = ''): string {
+    if (value === null || value === undefined || value === '') {
+      return '-';
+    }
+
+    return `${value}${suffix}`;
+  }
+
+  formatDate(value: string | null | undefined): string {
+    if (!value) {
+      return '-';
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return '-';
+    }
+
+    return date.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    });
+  }
+
+  formatBoolean(value: any): string {
+    if (value === null || value === undefined) {
+      return '-';
+    }
+
+    return Number(value) === 1 ? 'Yes' : 'No';
+  }
+
+  formatStatus(value: string | null | undefined): string {
+    if (!value) {
+      return '-';
+    }
+
+    return this.statusLabelMap[value] || value.replace(/_/g, ' ');
+  }
+
+  get mapLink(): string {
+    if (this.carData?.latitude && this.carData?.longitude) {
+      return `https://www.google.com/maps?q=${this.carData.latitude},${this.carData.longitude}`;
+    }
+
+    if (this.carData?.location) {
+      return `https://www.google.com/maps?q=${encodeURIComponent(this.carData.location)}`;
+    }
+
+    return 'https://www.google.com/maps';
   }
 
 

@@ -1,5 +1,4 @@
 <div class="main-content-wrapper">
-
     <div class="ct_top_heading_box">
         <div class="d-flex ct_flex_col_575 justify-content-between gap-2 align-items-center">
             <h4 class=""> <a routerLink="/home/car-listing" class="me-1 ct_text_dark"><i
@@ -14,9 +13,8 @@
             <div class="ct_mt_50 bg-white ct_border_radius_8 ct_box_shadow_25 ct_p_30 ct_576_p_20">
                 <div class="row gy-4">
                     <div class="col-xl-8">
-                        <div class="ct_border_para  ct_border_radius_8 ct_mb_32">
+                        <div class="ct_border_para ct_border_radius_8 ct_mb_32">
                             <div class="ct_border_bottom_para ct_p_24 ct_p_24_575_20">
-                                <!-- Main Swiper -->
                                 <div class="swiper mySwiperMain ct_product_slider_12">
                                     <div class="swiper-wrapper">
                                         <div class="swiper-slide" *ngFor="let img of images">
@@ -28,10 +26,8 @@
                                     <div class="swiper-button-prev"></div>
                                     }
                                 </div>
-
-                                <!-- Thumbnail Swiper -->
                                 @if(images.length > 1) {
-                                <div class="swiper mySwiperThumbs ct_card_small_thumb  mt-3">
+                                <div class="swiper mySwiperThumbs ct_card_small_thumb mt-3">
                                     <div class="swiper-wrapper">
                                         <div class="swiper-slide" *ngFor="let img of images">
                                             <img [src]="img" />
@@ -39,66 +35,203 @@
                                     </div>
                                 </div>
                                 }
-
                             </div>
                             <div class="ct_p_24 ct_p_24_575_20">
                                 <div class="d-flex justify-content-between align-items-center gap-3 flex-wrap">
                                     <div>
-                                        <h5 class="ct_fs_20 ct_fw_500">{{carData?.brandName}}</h5>
-                                        <div class="d-flex gap-3 align-items-center ct_flex_col_575 ">
-                                            <span class="ct_fs_30 ct_fw_400 ct_text_primary">{{carData?.selling_price |
-                                                number:'1.2-2'}} CHF</span>
-                                            <span class="ct_fs_18 ct_text_para">489 CHF/month</span>
-                                            <span class="ct_green_oval_badge">Available</span>
+                                        <h5 class="ct_fs_20 ct_fw_500">{{carData?.carModel || carData?.brandName ||
+                                            '-'}}</h5>
+                                        <div class="d-flex gap-3 align-items-center ct_flex_col_575">
+                                            <span class="ct_fs_30 ct_fw_400 ct_text_primary">{{carData?.selling_price ?
+                                                (carData?.selling_price | number:'1.2-2') : '-'}} CHF</span>
+                                            <span class="ct_fs_18 ct_text_para">
+                                                {{carData?.isLeasing == 1 ? ((carData?.leasingPrice | number:'1.2-2') +
+                                                ' CHF/month') : 'Leasing not available'}}
+                                            </span>
+                                            <span class="ct_green_oval_badge">
+                                                {{carData?.is_active == 1 ? 'Available' : 'Inactive'}}
+                                            </span>
                                         </div>
                                     </div>
-                                    <!-- <div>
-                                        <button class="ct_gradient_btn" data-bs-toggle="modal"
-                                            data-bs-target="#emblemModal">Assign Emblem</button>
-                                    </div> -->
                                 </div>
                             </div>
                         </div>
 
-                        <div class="ct_border_para ct_p_24 ct_p_24_575_20  ct_border_radius_8 ct_mb_32">
+                        <div class="ct_border_para ct_p_24 ct_p_24_575_20 ct_border_radius_8 ct_mb_32">
                             <h3 class="ct_fs_20 ct_fw_500 mb-4">Vehicle Details</h3>
                             <div class="row">
-
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Brand Name</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.brandName)}}</h4>
+                                </div>
                                 <div class="col-md-4 col-sm-6 mb-4">
                                     <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Year</h5>
-                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{carData?.selectYear ? carData?.selectYear :
-                                        '-'}}</h4>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.selectYear)}}</h4>
                                 </div>
                                 <div class="col-md-4 col-sm-6 mb-4">
                                     <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Mileage</h5>
-                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{carData?.carMileage ? carData?.carMileage :
-                                        '-'}} km</h4>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.carMileage, ' km')}}</h4>
                                 </div>
                                 <div class="col-md-4 col-sm-6 mb-4">
                                     <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Fuel Type</h5>
-                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{carData?.fuelType ? carData?.fuelType : '-'}}
-                                    </h4>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.fuelType)}}</h4>
                                 </div>
                                 <div class="col-md-4 col-sm-6 mb-4">
                                     <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Transmission</h5>
-                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{carData?.transmission ? carData?.transmission
-                                        : '-'}}</h4>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.transmission)}}</h4>
                                 </div>
                                 <div class="col-md-4 col-sm-6 mb-4">
-                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Power</h5>
-                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{carData?.powerOutput ? carData?.powerOutput :
-                                        '-'}} HP</h4>
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Power Output</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.powerOutput, ' HP')}}
+                                    </h4>
                                 </div>
                                 <div class="col-md-4 col-sm-6 mb-4">
                                     <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Consumption</h5>
-                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{carData?.consumption ? carData?.consumption :
-                                        '-'}}
-                                        {{carData?.consumption ? 'L/100KM' : ''}}</h4>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.consumption, '
+                                        L/100KM')}}</h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Sitting Capacity</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.sittingCapacity)}}</h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Doors</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.doors)}}</h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Car Color</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.carColor)}}</h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Engine Type</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.engineType)}}</h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">CO2 Emission</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.co2Emission)}}</h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Body Type</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.body_type)}}</h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Condition</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{conditionLabelMap[carData?.carCondition] ||
+                                        formatValue(carData?.carCondition)}}</h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Version</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.version)}}</h4>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="ct_border_para ct_p_24 ct_p_24_575_20  ct_border_radius_8 ct_mb_32">
+                        <div class="ct_border_para ct_p_24 ct_p_24_575_20 ct_border_radius_8 ct_mb_32">
+                            <h3 class="ct_fs_20 ct_fw_500 mb-4">Registration & Compliance</h3>
+                            <div class="row">
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">First Registration Date</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatDate(carData?.first_registration_date)}}
+                                    </h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Last MFK Date</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatDate(carData?.last_mfk_date)}}</h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Next MFK Due</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatDate(carData?.next_mfk_due)}}</h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">MFK Status</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatStatus(carData?.mfk_status_override ||
+                                        carData?.mfk_status)}}</h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">MFK Warranty ID</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.mfk_warrenty_id)}}</h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Swiss Vehicle</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatBoolean(carData?.is_swiss_vehicle)}}
+                                    </h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Accident Vehicle</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatBoolean(carData?.is_accident_vehicle)}}
+                                    </h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Metallic Paint</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatBoolean(carData?.is_metallic)}}</h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Fresh From Service</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">
+                                        {{formatBoolean(carData?.is_fresh_from_service)}}</h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ct_border_para ct_p_24 ct_p_24_575_20 ct_border_radius_8 ct_mb_32">
+                            <h3 class="ct_fs_20 ct_fw_500 mb-4">Technical Specifications</h3>
+                            <div class="row">
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Battery Capacity</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.battery_capacity, '
+                                        kWh')}}</h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Total Weight</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.total_weight, ' kg')}}
+                                    </h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Empty Weight</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.empty_weight, ' kg')}}
+                                    </h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Height</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.height_mm, ' mm')}}</h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Width</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.width_mm, ' mm')}}</h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Length</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.length_mm, ' mm')}}</h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Braked Towing Capacity</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">
+                                        {{formatValue(carData?.braked_towing_capacity_kg, ' kg')}}</h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Cubic Capacity</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.cubic_capacity)}}</h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Cylinders</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.cylinders)}}</h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">WLTP Range</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.wltp_range)}}</h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Energy Efficiency</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.energy_efficiency)}}</h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Euro Norm</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.euro_norm)}}</h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ct_border_para ct_p_24 ct_p_24_575_20 ct_border_radius_8 ct_mb_32">
                             <h3 class="ct_fs_20 ct_fw_500 mb-4">Equipment & Features</h3>
                             <ul class="ps-0 ct_feature_list">
                                 @if(carFeaturesList.length == 0){
@@ -111,132 +244,185 @@
                             </ul>
                         </div>
 
-                        <div class="ct_border_para ct_p_24 ct_p_24_575_20  ct_border_radius_8 ">
+                        <div class="ct_border_para ct_p_24 ct_p_24_575_20 ct_border_radius_8 ct_mb_32">
                             <h3 class="ct_fs_20 ct_fw_500 mb-3">Description</h3>
                             <p class="ct_text_para ct_fs_16 ct_max_height_250 ct_custom_scroll mb-0 pe-2">
                                 {{carData?.description ? carData?.description : '-'}}
                             </p>
                         </div>
-                    </div>
-                    <div class="col-xl-4">
 
-                        <!-- right content -->
-                        <div class="ct_border_para ct_p_24 ct_p_24_575_20  ct_border_radius_8 ct_mb_32">
-                            <h3 class="ct_fs_20 ct_fw_500 mb-3">User Information</h3>
-                            <div class="d-flex flex-wrap gap-3">
-                                <div class="ct_blue_light_box ct_border_radius_8 flex-shrink-0">
-                                    <svg width="12" height="16" viewBox="0 0 12 16" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <g clip-path="url(#clip0_5969_3937)">
-                                            <path
-                                                d="M1.5 0C0.671875 0 0 0.671875 0 1.5V14.5C0 15.3281 0.671875 16 1.5 16H4.5V13.5C4.5 12.6719 5.17188 12 6 12C6.82812 12 7.5 12.6719 7.5 13.5V16H10.5C11.3281 16 12 15.3281 12 14.5V1.5C12 0.671875 11.3281 0 10.5 0H1.5ZM2 7.5C2 7.225 2.225 7 2.5 7H3.5C3.775 7 4 7.225 4 7.5V8.5C4 8.775 3.775 9 3.5 9H2.5C2.225 9 2 8.775 2 8.5V7.5ZM5.5 7H6.5C6.775 7 7 7.225 7 7.5V8.5C7 8.775 6.775 9 6.5 9H5.5C5.225 9 5 8.775 5 8.5V7.5C5 7.225 5.225 7 5.5 7ZM8 7.5C8 7.225 8.225 7 8.5 7H9.5C9.775 7 10 7.225 10 7.5V8.5C10 8.775 9.775 9 9.5 9H8.5C8.225 9 8 8.775 8 8.5V7.5ZM2.5 3H3.5C3.775 3 4 3.225 4 3.5V4.5C4 4.775 3.775 5 3.5 5H2.5C2.225 5 2 4.775 2 4.5V3.5C2 3.225 2.225 3 2.5 3ZM5 3.5C5 3.225 5.225 3 5.5 3H6.5C6.775 3 7 3.225 7 3.5V4.5C7 4.775 6.775 5 6.5 5H5.5C5.225 5 5 4.775 5 4.5V3.5ZM8.5 3H9.5C9.775 3 10 3.225 10 3.5V4.5C10 4.775 9.775 5 9.5 5H8.5C8.225 5 8 4.775 8 4.5V3.5C8 3.225 8.225 3 8.5 3Z"
-                                                fill="#0267EB" />
-                                        </g>
-                                        <defs>
-                                            <clipPath id="clip0_5969_3937">
-                                                <path d="M0 0H12V16H0V0Z" fill="white" />
-                                            </clipPath>
-                                        </defs>
-                                    </svg>
+                        <div class="ct_border_para ct_p_24 ct_p_24_575_20 ct_border_radius_8">
+                            <h3 class="ct_fs_20 ct_fw_500 mb-4">Identifiers & Metadata</h3>
+                            <div class="row">
+
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">VRN</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.vrn)}}</h4>
                                 </div>
-                                <div>
-                                    <h5 class="ct_fs_16 ct_fw_400 mb-2">{{carData?.sellerName ? carData?.sellerName :
-                                        '-'}}</h5>
-                                    <p class="ct_fs_14 ct_fw_400 ct_text_para mb-1">{{carData?.sellerPhone ?
-                                        carData?.sellerPhone : '-'}}</p>
-                                    <p class="ct_fs_14 ct_fw_400 ct_text_para mb-0">{{carData?.sellerEmail ?
-                                        carData?.sellerEmail : '-'}}</p>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">VIN Number</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.vin_number)}}</h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Registration Master Number</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">
+                                        {{formatValue(carData?.registration_master_number)}}</h4>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <h5 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Listing Status</h5>
+                                    <h4 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.listing_status)}}</h4>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
+                    <div class="col-xl-4">
+                        <div class="ct_border_para ct_p_24 ct_p_24_575_20 ct_border_radius_8 ct_mb_32">
+                            <h3 class="ct_fs_20 ct_fw_500 mb-3">User Information</h3>
+                            <div class="d-flex flex-wrap gap-3">
+                                <div class="flex-shrink-0">
+                                    <img [src]="carData?.sellerProfileImage || 'img/no_car.png'" alt="Seller image"
+                                        class="ct_border_radius_8"
+                                        style="width: 64px; height: 64px; object-fit: cover;" />
+                                </div>
+                                <div>
+                                    <h5 class="ct_fs_16 ct_fw_400 mb-2">{{formatValue(carData?.sellerName)}}</h5>
+                                    <p class="ct_fs_14 ct_fw_400 ct_text_para mb-1">
+                                        {{formatValue(carData?.sellerPhone)}}</p>
+                                    <p class="ct_fs_14 ct_fw_400 ct_text_para mb-0">
+                                        {{formatValue(carData?.sellerEmail)}}</p>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <!-- <div class="col-sm-6 mb-3">
+                                    <h6 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Seller Type</h6>
+                                    <h5 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.seller_type)}}</h5>
+                                </div> -->
+                                <!-- <div class="col-sm-6 mb-3">
+                                    <h6 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Company Name</h6>
+                                    <h5 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.companyName)}}</h5>
+                                </div> -->
+                                <!-- <div class="col-sm-12">
+                                    <h6 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Seller Location</h6>
+                                    <h5 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.sellerLocation)}}</h5>
+                                </div> -->
+                            </div>
+                        </div>
 
-                        <div class="ct_border_para ct_p_24 ct_p_24_575_20  ct_border_radius_8 ct_mb_32">
+                        <div class="ct_border_para ct_p_24 ct_p_24_575_20 ct_border_radius_8 ct_mb_32">
                             <div class="d-flex gap-3 align-items-center mb-3">
-                                <h3 class="ct_fs_20 ct_fw_500 mb-0"> MFK Inspection</h3>
+                                <h3 class="ct_fs_20 ct_fw_500 mb-0">MFK Inspection</h3>
                                 <div class="d-flex align-items-center gap-2">
                                     <span class="ct_dot_12 ct_dot_green"></span>
-                                    <span class="ct_fs_14 ct_fw_400 ct_text_green">Valid</span>
+                                    <span
+                                        class="ct_fs_14 ct_fw_400 ct_text_green">{{formatStatus(carData?.mfk_status_override
+                                        || carData?.mfk_status)}}</span>
                                 </div>
                             </div>
                             <div class="d-flex justify-content-between align-items-center">
                                 <h6 class="ct_fs_14 ct_fw_400 ct_text_para mb-0">Valid Until</h6>
-                                <h5 class="ct_fs_16 ct_fw_400 mb-0 ">March 2025</h5>
+                                <h5 class="ct_fs_16 ct_fw_400 mb-0">{{formatDate(carData?.next_mfk_due)}}</h5>
                             </div>
-
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <h6 class="ct_fs_14 ct_fw_400 ct_text_para mb-0">Override</h6>
+                                <h5 class="ct_fs_16 ct_fw_400 mb-0">{{formatStatus(carData?.mfk_status_override)}}</h5>
+                            </div>
                         </div>
 
-
-                        <div class="ct_border_para ct_p_24 ct_p_24_575_20  ct_border_radius_8 ct_mb_32">
-
-                            <h3 class="ct_fs_20 ct_fw_500 mb-3"> Warranty & Returns </h3>
-
-
+                        <div class="ct_border_para ct_p_24 ct_p_24_575_20 ct_border_radius_8 ct_mb_32">
+                            <h3 class="ct_fs_20 ct_fw_500 mb-3">Warranty & Returns</h3>
                             <div class="d-flex justify-content-between align-items-center ct_mb_12">
-                                <h6 class="ct_fs_14 ct_fw_400 ct_text_para mb-0"> Warranty</h6>
-                                <h5 class="ct_fs_16 ct_fw_400 mb-0 ">24 months</h5>
+                                <h6 class="ct_fs_14 ct_fw_400 ct_text_para mb-0">Warranty Period</h6>
+                                <h5 class="ct_fs_16 ct_fw_400 mb-0">{{formatDate(carData?.warranty_from)}} -
+                                    {{formatDate(carData?.warranty_to)}}</h5>
                             </div>
                             <div class="d-flex justify-content-between align-items-center ct_mb_12">
-                                <h6 class="ct_fs_14 ct_fw_400 ct_text_para mb-0"> Return Policy</h6>
-                                <h5 class="ct_fs_16 ct_fw_400 mb-0 ">24 days</h5>
+                                <h6 class="ct_fs_14 ct_fw_400 ct_text_para mb-0">Warranty Type</h6>
+                                <h5 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.warranty_type_text)}}</h5>
                             </div>
                             <div class="d-flex justify-content-between align-items-center">
-                                <h6 class="ct_fs_14 ct_fw_400 ct_text_para mb-0"> Quality Check</h6>
-                                <h5 class="ct_fs_16 ct_fw_400 mb-0 ct_text_green">Passed</h5>
+                                <h6 class="ct_fs_14 ct_fw_400 ct_text_para mb-0">Additional Title</h6>
+                                <h5 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.additional_title_999)}}</h5>
                             </div>
-
                         </div>
 
-                        <div class="ct_border_para ct_p_24 ct_p_24_575_20  ct_border_radius_8 ct_mb_32">
-
-                            <h3 class="ct_fs_20 ct_fw_500 mb-3"> Leasing Calculator </h3>
-
-
+                        <div class="ct_border_para ct_p_24 ct_p_24_575_20 ct_border_radius_8 ct_mb_32">
+                            <h3 class="ct_fs_20 ct_fw_500 mb-3">Pricing & Leasing</h3>
                             <div class="d-flex justify-content-between align-items-center ct_mb_12">
-                                <h6 class="ct_fs_14 ct_fw_400 ct_text_para mb-0"> Monthly Payment</h6>
-                                <h5 class="ct_fs_16 ct_fw_400 mb-0 ct_text_primary">€489</h5>
+                                <h6 class="ct_fs_14 ct_fw_400 ct_text_para mb-0">Total Price</h6>
+                                <h5 class="ct_fs_16 ct_fw_400 mb-0 ct_text_primary">{{carData?.totalPrice ?
+                                    (carData?.totalPrice | number:'1.2-2') : '-'}} CHF</h5>
                             </div>
                             <div class="d-flex justify-content-between align-items-center ct_mb_12">
-                                <h6 class="ct_fs_14 ct_fw_400 ct_text_para mb-0"> Duration</h6>
-                                <h5 class="ct_fs_16 ct_fw_400 mb-0 ">24 months</h5>
+                                <h6 class="ct_fs_14 ct_fw_400 ct_text_para mb-0">Selling Price</h6>
+                                <h5 class="ct_fs_16 ct_fw_400 mb-0">{{carData?.selling_price ? (carData?.selling_price |
+                                    number:'1.2-2') : '-'}} CHF</h5>
                             </div>
                             <div class="d-flex justify-content-between align-items-center ct_mb_12">
-                                <h6 class="ct_fs_14 ct_fw_400 ct_text_para mb-0"> Interest Rate</h6>
-                                <h5 class="ct_fs_16 ct_fw_400 mb-0">3.7%</h5>
+                                <h6 class="ct_fs_14 ct_fw_400 ct_text_para mb-0">Leasing Available</h6>
+                                <h5 class="ct_fs_16 ct_fw_400 mb-0">{{formatBoolean(carData?.isLeasing)}}</h5>
                             </div>
-
                             <div class="d-flex justify-content-between align-items-center ct_mb_12">
-                                <h6 class="ct_fs_14 ct_fw_400 ct_text_para mb-0">Down Payment</h6>
-                                <h5 class="ct_fs_16 ct_fw_400 mb-0">€5,000</h5>
+                                <h6 class="ct_fs_14 ct_fw_400 ct_text_para mb-0">Leasing Price</h6>
+                                <h5 class="ct_fs_16 ct_fw_400 mb-0">{{carData?.leasingPrice ? (carData?.leasingPrice |
+                                    number:'1.2-2') : '-'}} CHF</h5>
                             </div>
-
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="ct_fs_14 ct_fw_400 ct_text_para mb-0">New Price</h6>
+                                <h5 class="ct_fs_16 ct_fw_400 mb-0">{{carData?.new_price ? (carData?.new_price |
+                                    number:'1.2-2') : '-'}} CHF</h5>
+                            </div>
                         </div>
 
-                        <div class="ct_border_para ct_p_24 ct_p_24_575_20  ct_border_radius_8 ">
+                        <div class="ct_border_para ct_p_24 ct_p_24_575_20 ct_border_radius_8 ct_mb_32">
+                            <h3 class="ct_fs_20 ct_fw_500 mb-3">Extra Details</h3>
+                            <div class="d-flex justify-content-between align-items-center ct_mb_12">
+                                <h6 class="ct_fs_14 ct_fw_400 ct_text_para mb-0">Extras</h6>
+                                <h5 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.extras)}}</h5>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center ct_mb_12">
+                                <h6 class="ct_fs_14 ct_fw_400 ct_text_para mb-0">Document</h6>
+                                <h5 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.document)}}</h5>
+                            </div>
+                            <!-- <div class="d-flex justify-content-between align-items-center ct_mb_12">
+                                <h6 class="ct_fs_14 ct_fw_400 ct_text_para mb-0">Reel Thumbnails</h6>
+                                <h5 class="ct_fs_16 ct_fw_400 mb-0">{{formatValue(carData?.reelThumbnails)}}</h5>
+                            </div> -->
+                        </div>
 
-                            <h3 class="ct_fs_20 ct_fw_500 mb-3"> Location </h3>
-
-
+                        <div class="ct_border_para ct_p_24 ct_p_24_575_20 ct_border_radius_8">
+                            <h3 class="ct_fs_20 ct_fw_500 mb-3">Location</h3>
                             <div class="mb-3">
-                                <iframe class="ct_border_radius_8"
-                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d85709.22358810017!2d8.472706077526897!3d47.83158726149703!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x479085d550c50d35%3A0x7b28a3817a35f96!2s78176%20Blumberg%2C%20Germany!5e0!3m2!1sen!2sin!4v1778062492539!5m2!1sen!2sin"
-                                    width="100%" height="160" style="border:0;" allowfullscreen="" loading="lazy"
-                                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                @if(carData?.latitude && carData?.longitude){
+                                <a [href]="mapLink" target="_blank"
+                                    class="ct_gradient_btn d-inline-block text-center w-100">
+                                    Open in Google Maps
+                                </a>
+                                }
                             </div>
-                            <p class="ct_fs_14 ct_text_para mb-0">Maximilianstraße 35, 80539 Munich, Germany</p>
+                            <div class="ct_mb_12">
+                                <h6 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Location</h6>
+                                <p class="ct_fs_14 mb-0">{{formatValue(carData?.location)}}</p>
+                            </div>
+                            <div class="ct_mb_12">
+                                <h6 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Latitude</h6>
+                                <p class="ct_fs_14 mb-0">{{formatValue(carData?.latitude)}}</p>
+                            </div>
+                            <div>
+                                <h6 class="ct_fs_14 ct_fw_400 ct_text_para mb-1">Longitude</h6>
+                                <p class="ct_fs_14 mb-0">{{formatValue(carData?.longitude)}}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- end -->
         </div>
+
         <div class="mt-5">
             <h4 class="ct_fs_24 ct_fw_600 mb-3">Reel Video</h4>
             <div class="d-flex align-items-center justify-content-center video_section">
-                <!-- If reel exists, show player -->
                 <app-video-player *ngIf="carData?.carReel; else noReel" [videoUrl]="carData?.carReel">
                 </app-video-player>
-                <!-- Fallback message -->
                 <ng-template #noReel>
                     <div class="">
                         <p class="text-center ct_fs_16">No reel video available.</p>
