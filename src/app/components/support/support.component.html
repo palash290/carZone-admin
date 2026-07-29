@@ -15,7 +15,8 @@
                     <!-- Search -->
                     <div class="search-box  ct_w_100_767" style="">
                         <div class="input-group position-relative">
-                            <input type="text" class="form-control ct_input ps-5" placeholder="Search..." />
+                            <input type="text" class="form-control ct_input ps-5" placeholder="Search..."
+                                [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" />
 
                             <i class="fas fa-search ct_show_left ct_text_para"></i>
                         </div>
@@ -34,7 +35,7 @@
                                 </svg>
 
 
-                                All Status <svg class="ms-2" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                {{ selectedStatus ? (selectedStatus | titlecase) : 'All Status' }} <svg class="ms-2" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path d="M18 9L12 15L6 9" stroke="#919EAB" stroke-width="1.5" stroke-linecap="round"
                                         stroke-linejoin="round" />
@@ -43,10 +44,13 @@
                             </button>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a class="dropdown-item" href="#">Pending</a>
+                                    <a class="dropdown-item" href="javascript:void(0)" (click)="selectStatus('')">All Status</a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" href="#"> Resolved</a>
+                                    <a class="dropdown-item" href="javascript:void(0)" (click)="selectStatus('pending')">Pending</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="javascript:void(0)" (click)="selectStatus('resolved')"> Resolved</a>
                                 </li>
 
                             </ul>
@@ -62,7 +66,7 @@
                                 </svg>
 
 
-                                User Type<svg class="ms-2" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                {{ selectedAccountType ? (selectedAccountType | titlecase) : 'User Type' }}<svg class="ms-2" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path d="M18 9L12 15L6 9" stroke="#919EAB" stroke-width="1.5" stroke-linecap="round"
                                         stroke-linejoin="round" />
@@ -71,10 +75,13 @@
                             </button>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a class="dropdown-item" href="#">Private</a>
+                                    <a class="dropdown-item" href="javascript:void(0)" (click)="selectAccountType('')">All User Types</a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" href="#"> Company</a>
+                                    <a class="dropdown-item" href="javascript:void(0)" (click)="selectAccountType('private')">Private</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="javascript:void(0)" (click)="selectAccountType('company')"> Company</a>
                                 </li>
 
                             </ul>
@@ -94,29 +101,30 @@
                                 <th>User Type</th>
                                 <th>Description</th>
                                 <th>Date</th>
-
-
-
                                 <th>Status</th>
                                 <th class="">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-
-                                <td>Alyvia Kelley</td>
-                                <td>Private Individual</td>
+                            <tr *ngFor="let item of filteredData | paginate: { itemsPerPage: limit, currentPage: p, totalItems: totalItems }; let i = index">
+                                <td>{{ (p - 1) * limit + i + 1 }}</td>
+                                <td>{{ item.fullName }}</td>
+                                <td>{{ item.account_type | titlecase }}</td>
                                 <td>
-                                    <p class="ct_overlay_text mb-0">“I tried contacting the seller but haven’t received
-                                        any response. Can you help me connect with them?”</p>
+                                    <p class="ct_overlay_text mb-0" [title]="item.issue">{{ item.issue }}</p>
                                 </td>
-                                <td>06/18/1978</td>
-                                <td><span class="ct_text_green ct_fw_500 text-uppercase">Resolved</span></td>
+                                <td>{{ item.created_at | date:'MM/dd/yyyy' }}</td>
+                                <td>
+                                    <span [ngClass]="{
+                                        'ct_text_green': item.status === 'resolved',
+                                        'ct_text_yellow': item.status === 'pending'
+                                    }" class="ct_fw_500 text-uppercase">
+                                        {{ item.status }}
+                                    </span>
+                                </td>
                                 <td class="">
                                     <div class="actions-cell d-flex gap-2">
-                                        <a routerLink="/home/support-detail" class="btn-icon btn-view">
-
+                                        <a [routerLink]="['/home/support-detail']" [queryParams]="{ id: item.id }" class="btn-icon btn-view">
                                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <path
@@ -126,81 +134,18 @@
                                                     d="M7.5 10C7.5 10.663 7.76339 11.2989 8.23223 11.7678C8.70107 12.2366 9.33696 12.5 10 12.5C10.663 12.5 11.2989 12.2366 11.7678 11.7678C12.2366 11.2989 12.5 10.663 12.5 10C12.5 9.33696 12.2366 8.70107 11.7678 8.23223C11.2989 7.76339 10.663 7.5 10 7.5C9.33696 7.5 8.70107 7.76339 8.23223 8.23223C7.76339 8.70107 7.5 9.33696 7.5 10Z"
                                                     stroke="#0267EB" stroke-width="1.5" />
                                             </svg>
-
-
                                         </a>
-
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-
-                                <td>Alyvia Kelley</td>
-                                <td>Company</td>
-                                <td>
-                                    <p class="ct_overlay_text mb-0">“I tried contacting the seller but haven’t received
-                                        any response. Can you help me connect with them?”</p>
-                                </td>
-                                <td> 06/18/1978</td>
-                                <td><span class="ct_text_green ct_fw_500 text-uppercase">Resolved</span></td>
-                                <td class="">
-                                    <div class="actions-cell d-flex gap-2">
-                                        <a href="support-detail.html" class="btn-icon btn-view">
-
-                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M17.2712 12.7471C17.9796 11.8271 18.3337 11.3662 18.3337 10.0004C18.3337 8.63374 17.9796 8.17457 17.2712 7.25374C15.8571 5.41707 13.4854 3.33374 10.0004 3.33374C6.51541 3.33374 4.14374 5.41707 2.72957 7.25374C2.02124 8.17541 1.66707 8.63457 1.66707 10.0004C1.66707 11.3671 2.02124 11.8262 2.72957 12.7471C4.14374 14.5837 6.51541 16.6671 10.0004 16.6671C13.4854 16.6671 15.8571 14.5837 17.2712 12.7471Z"
-                                                    stroke="#0267EB" stroke-width="1.5" />
-                                                <path
-                                                    d="M7.5 10C7.5 10.663 7.76339 11.2989 8.23223 11.7678C8.70107 12.2366 9.33696 12.5 10 12.5C10.663 12.5 11.2989 12.2366 11.7678 11.7678C12.2366 11.2989 12.5 10.663 12.5 10C12.5 9.33696 12.2366 8.70107 11.7678 8.23223C11.2989 7.76339 10.663 7.5 10 7.5C9.33696 7.5 8.70107 7.76339 8.23223 8.23223C7.76339 8.70107 7.5 9.33696 7.5 10Z"
-                                                    stroke="#0267EB" stroke-width="1.5" />
-                                            </svg>
-
-
-                                        </a>
-
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-
-                                <td>Alyvia Kelley</td>
-                                <td>Private Individual</td>
-                                <td>
-                                    <p class="ct_overlay_text mb-0">“I tried contacting the seller but haven’t received
-                                        any response. Can you help me connect with them?”</p>
-                                </td>
-                                <td> 06/18/1978</td>
-                                <td><span class="ct_text_yellow ct_fw_500 text-uppercase">Pending</span></td>
-                                <td class="">
-                                    <div class="actions-cell d-flex gap-2">
-                                        <a href="support-detail.html" class="btn-icon btn-view">
-
-                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M17.2712 12.7471C17.9796 11.8271 18.3337 11.3662 18.3337 10.0004C18.3337 8.63374 17.9796 8.17457 17.2712 7.25374C15.8571 5.41707 13.4854 3.33374 10.0004 3.33374C6.51541 3.33374 4.14374 5.41707 2.72957 7.25374C2.02124 8.17541 1.66707 8.63457 1.66707 10.0004C1.66707 11.3671 2.02124 11.8262 2.72957 12.7471C4.14374 14.5837 6.51541 16.6671 10.0004 16.6671C13.4854 16.6671 15.8571 14.5837 17.2712 12.7471Z"
-                                                    stroke="#0267EB" stroke-width="1.5" />
-                                                <path
-                                                    d="M7.5 10C7.5 10.663 7.76339 11.2989 8.23223 11.7678C8.70107 12.2366 9.33696 12.5 10 12.5C10.663 12.5 11.2989 12.2366 11.7678 11.7678C12.2366 11.2989 12.5 10.663 12.5 10C12.5 9.33696 12.2366 8.70107 11.7678 8.23223C11.2989 7.76339 10.663 7.5 10 7.5C9.33696 7.5 8.70107 7.76339 8.23223 8.23223C7.76339 8.70107 7.5 9.33696 7.5 10Z"
-                                                    stroke="#0267EB" stroke-width="1.5" />
-                                            </svg>
-
-
-                                        </a>
-
-
-
-
                                     </div>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+                <div *ngIf="filteredData.length === 0" class="text-center">
+                    <p class="ct_fs_15 mt-5">No data found</p>
+                </div>
+                <pagination-controls class="ct_pagination_div" *ngIf="filteredData.length > 0"
+                    (pageChange)="onPageChange($event)"></pagination-controls>
             </div>
 
 

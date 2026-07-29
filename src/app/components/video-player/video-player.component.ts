@@ -15,7 +15,7 @@ interface Document extends HTMLDocument {
 })
 export class VideoPlayerComponent {
 
-   public displayControllsOpacity = 0;
+  public displayControllsOpacity = 0;
   public isPlaying = false;
   public isFullVolume = true;
   public isFullScreen = false;

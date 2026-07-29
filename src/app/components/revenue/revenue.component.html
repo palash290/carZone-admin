@@ -1,5 +1,4 @@
 <div class="main-content-wrapper">
-
     <div class="ct_top_heading_box">
         <div class="d-flex justify-content-between gap-3 flex-wrap">
             <div>
@@ -9,7 +8,7 @@
                 </p>
             </div>
             <div>
-                <button class="ct_block_btn">
+                <button (click)="exportCSV()" class="ct_block_btn">
                     <svg class="me-2" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
                         <g clip-path="url(#clip0_5969_5772)">
@@ -33,14 +32,11 @@
                     Export CSV</button>
             </div>
         </div>
-
     </div>
     <div class="ct_inner_header_bg ct_mt_50 mb-5 ct_px_28">
         <div class="">
             <!-- main content come here -->
-
-
-            <div class="row ">
+            <div *ngIf="requestData" class="row">
                 <div class="col-xl-3 col-sm-6 mb-4">
                     <div class="ct_dashboard_box ct_bg_primary">
                         <div class="ct_dashboard_icon_box ct_mb_20">
@@ -51,7 +47,7 @@
                                 Total Revenue
                             </p>
                             <h5 class="ct_fw_800 ct_fs_24 mb-0 text-white">
-                                CHF 1,550.–
+                                {{ requestData.cards?.totalRevenue | currency:'CHF':'symbol':'1.0-0' }}
                             </h5>
                         </div>
                     </div>
@@ -66,7 +62,7 @@
                                 Total Slot Packages Sold
                             </p>
                             <h5 class="ct_fw_800 ct_fs_24 mb-0">
-                                1,245
+                                {{ requestData.cards?.totalSlotPackagesSold | number }}
                             </h5>
                         </div>
                     </div>
@@ -81,7 +77,7 @@
                                 This Month's Revenue
                             </p>
                             <h5 class="ct_fw_800 ct_fs_24 mb-0">
-                                CHF 130.–
+                                {{ requestData.cards?.thisMonthRevenue | currency:'CHF':'symbol':'1.0-2' }}
                             </h5>
                         </div>
                     </div>
@@ -96,14 +92,13 @@
                                 Individual Listings Sold
                             </p>
                             <h5 class="ct_fw_800 ct_fs_24 mb-0">
-                                45
+                                {{ requestData.cards?.individualListingsSold | number }}
                             </h5>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row ct_mt_45">
-
+            <div *ngIf="requestData" class="row ct_mt_45">
                 <div class="col-xl-12 mb-4">
                     <div class="ct_dashboard_box">
                         <div class="revenue-card">
@@ -112,105 +107,72 @@
                                 <div>
                                     <div class="d-flex justify-content-between">
                                         <div class="card-label ct_fs_16 ct_fw_600 ct_text_para">Revenue Overview</div>
-
                                         <select class="year-select">
-                                            <option>2025</option>
-                                            <option>2024</option>
-                                            <option>2023</option>
+                                            <option>{{ requestData.revenueOverview?.year }}</option>
                                         </select>
                                     </div>
                                     <div class="d-flex gap-3 align-items-center">
-                                        <div class="card-amount ct_fs_20 ct_fw_600">CHF 45'900.–</div>
-                                        <div class="ct_fs_14 ct_fw_500 ct_text_green">
-                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <circle opacity="0.15" cx="7.96265" cy="7.96265" r="7.96265"
-                                                    fill="#00AE65" />
-                                                <mask id="mask0_5227_3365" style="mask-type:alpha"
-                                                    maskUnits="userSpaceOnUse" x="1" y="1" width="14" height="14">
-                                                    <rect x="1.13745" y="1.13745" width="13.6503" height="13.6503"
-                                                        fill="#22D188" />
-                                                </mask>
-                                                <g mask="url(#mask0_5227_3365)">
-                                                    <path
-                                                        d="M7.39385 11.3751V6.14249L5.34631 8.19003L4.55005 7.39376L7.96261 3.9812L11.3752 7.39376L10.5789 8.19003L8.53137 6.14249V11.3751H7.39385Z"
-                                                        fill="#00AE65" />
-                                                </g>
-                                            </svg>
-
-                                            +5.2%
+                                        <div class="card-amount ct_fs_20 ct_fw_600">
+                                            {{ requestData.revenueOverview?.totalRevenue |
+                                            currency:'CHF':'symbol':'1.0-2' }}
                                         </div>
                                     </div>
-
                                 </div>
-
                             </div>
-
                             <!-- Chart -->
-                            <div id="revenueChart"></div>
+                            <div *ngIf="revenueChartOptions">
+                                <apx-chart [series]="revenueChartOptions.series" [chart]="revenueChartOptions.chart"
+                                    [xaxis]="revenueChartOptions.xaxis" [yaxis]="revenueChartOptions.yaxis"
+                                    [stroke]="revenueChartOptions.stroke" [fill]="revenueChartOptions.fill"
+                                    [grid]="revenueChartOptions.grid" [markers]="revenueChartOptions.markers"
+                                    [tooltip]="revenueChartOptions.tooltip"
+                                    [dataLabels]="revenueChartOptions.dataLabels" [legend]="revenueChartOptions.legend"
+                                    [colors]="revenueChartOptions.colors"></apx-chart>
+                            </div>
                         </div>
-
                     </div>
                 </div>
             </div>
-
             <!--========== recently listed card ========== -->
-            <div class="ct_mt_45">
-
-
+            <div *ngIf="requestData" class="ct_mt_45">
                 <div class="dashboard-wrap">
                     <div class="row g-4">
-
                         <!-- Slots Sold by Package -->
                         <div class="col-12 col-md-6">
                             <div class="ct_dashboard_box">
                                 <div class="panel-title ct_fs_22 ct_fw_700 ct_mb_32">Slots Sold by Package</div>
 
-                                <div class="slot-row ct_mb_35">
+                                <div *ngFor="let slot of requestData.slotsSold" class="slot-row ct_mb_35">
                                     <div class="slot-meta d-flex justify-content-between align-items-center mb-2">
-                                        <span class="slot-label ct_fs_18 ct_fw_600">10 Slot Package</span>
-                                        <span class="slot-value ct_fs_18 ct_fw_600 ct_text_primary">4,280 Sales</span>
+                                        <span class="slot-label ct_fs_18 ct_fw_600">{{ slot.title || '-' }}</span>
+                                        <span class="slot-value ct_fs_18 ct_fw_600 ct_text_primary">{{ slot.sales |
+                                            number }} Sales (CHF {{ slot.revenue }})</span>
                                     </div>
                                     <div class="bar-track">
-                                        <div class="bar-fill" data-width="70"></div>
+                                        <div class="bar-fill" [style.width.%]="(slot.sales / maxSales) * 100"></div>
                                     </div>
                                 </div>
-
-                                <div class="slot-row ct_mb_35">
-                                    <div class="slot-meta d-flex justify-content-between align-items-center mb-2">
-                                        <span class="slot-label ct_fs_18 ct_fw_600">15 Slot Package</span>
-                                        <span class="slot-value ct_fs_18 ct_fw_600 ct_text_primary">6,120 Sales</span>
-                                    </div>
-                                    <div class="bar-track">
-                                        <div class="bar-fill" data-width="100"></div>
-                                    </div>
-                                </div>
-
-                                <div class="slot-row">
-                                    <div class="slot-meta d-flex justify-content-between align-items-center mb-2">
-                                        <span class="slot-label ct_fs_18 ct_fw_600">20 Slot Package</span>
-                                        <span class="slot-value ct_fs_18 ct_fw_600 ct_text_primary">2,440 Sales</span>
-                                    </div>
-                                    <div class="bar-track">
-                                        <div class="bar-fill" data-width="40"></div>
-                                    </div>
-                                </div>
-
                             </div>
                         </div>
-
                         <!-- Plan Distribution -->
                         <div class="col-12 col-md-6">
                             <div class="ct_dashboard_box">
                                 <div class="panel-title  ct_fs_22 ct_fw_700 ct_mb_32">Plan Distribution</div>
                                 <div class="donut-wrap">
-                                    <div id="donutChart"></div>
+                                    <div *ngIf="donutChartOptions">
+                                        <apx-chart [series]="donutChartOptions.series" [chart]="donutChartOptions.chart"
+                                            [labels]="donutChartOptions.labels" [colors]="donutChartOptions.colors"
+                                            [legend]="donutChartOptions.legend"
+                                            [dataLabels]="donutChartOptions.dataLabels"
+                                            [plotOptions]="donutChartOptions.plotOptions"></apx-chart>
+                                    </div>
                                     <div class="legend-box">
                                         <div class="legend-item d-flex gap-2 align-items-center">
                                             <div class="ct_dot_12  ct_bg_primary"></div>
                                             <div>
                                                 <div class="legend-label ct_fs_16 ct_fw_600 mb-0">Monthly Plans</div>
-                                                <div class="legend-sub ct_fs_16 ct_fw_400 ct_text_para">2,966 Active
+                                                <div class="legend-sub ct_fs_16 ct_fw_400 ct_text_para">{{
+                                                    monthlyActiveSubscribers | number }} Active
                                                     Subscribers</div>
                                             </div>
                                         </div>
@@ -218,7 +180,8 @@
                                             <div class="ct_dot_12 ct_dot_grey"></div>
                                             <div>
                                                 <div class="legend-label ct_fs_16 ct_fw_600 mb-0">Yearly Plans</div>
-                                                <div class="legend-sub ct_fs_16 ct_fw_400 ct_text_para">1,154 Active
+                                                <div class="legend-sub ct_fs_16 ct_fw_400 ct_text_para">{{
+                                                    yearlyActiveSubscribers | number }} Active
                                                     Subscribers</div>
                                             </div>
                                         </div>
@@ -230,14 +193,11 @@
                     </div>
                 </div>
             </div>
-            <!--========== recently listed card end ========== -->
-
-
-
-
-
-
-            <!-- end -->
+            <div *ngIf="loading" class="text-center mt-5">
+                <p class="ct_fs_15">Loading...</p>
+            </div>
         </div>
+        <!--========== recently listed card end ========== -->
+        <!-- end -->
     </div>
 </div>

@@ -58,7 +58,8 @@
                                 <td>{{(p - 1) * 10 + i + 1}}</td>
                                 <td>{{item.carModel ? item.carModel : '-'}}</td>
                                 <td>{{item.brandName ? item.brandName : '-'}}</td>
-                                <td>{{item.totalPrice | number:'1.2-2'}} CHF</td>
+                                <!-- <td>{{item.totalPrice | number:'1.2-2'}} {{item.totalPrice ? 'CHF' : '-'}}</td> -->
+                                 <td>{{item.totalPrice}} {{item.totalPrice ? 'CHF' : '-'}}</td>
                                 <td>{{item.createdAt | date:'dd-MM-yyyy'}}</td>
                                 <!-- <td>
                                     @if(item.carImages?.length){
@@ -75,7 +76,7 @@
                                 </td>
                                 <td>
                                     <span *ngIf="item.isLeasing == 1" class="">{{item.leasingPrice | number:'1.2-2'}}
-                                        CHF</span>
+                                        {{item.leasingPrice ? 'CHF' : '-'}}</span>
                                     <span *ngIf="item.isLeasing == 0" class="">-</span>
                                 </td>
                                 <td>

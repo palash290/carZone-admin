@@ -1,88 +1,75 @@
 <div class="main-content-wrapper">
-
     <div class="ct_top_heading_box">
         <div class="d-flex ct_flex_col_575 justify-content-between gap-2 align-items-center">
-            <h4 class=""> <a routerLink="/home/report" class="me-1 ct_text_dark"><i
-                        class="fa-solid fa-chevron-left"></i></a> Report Details</h4>
-
-
-
+            <h4 class="">
+                <a routerLink="/home/report" class="me-1 ct_text_dark"><i class="fa-solid fa-chevron-left"></i>
+                </a> Report Details
+            </h4>
         </div>
-
-
     </div>
     <div class="ct_inner_header_bg ct_mt_50 mb-5 ct_px_28">
         <div class="">
-
-
-
-
-            <div class="ct_mt_50 bg-white ct_border_radius_8 ct_box_shadow_25 ct_p_30 ct_576_p_20">
-
-
-
-
+            <div *ngIf="reportData" class="ct_mt_50 bg-white ct_border_radius_8 ct_box_shadow_25 ct_p_30 ct_576_p_20">
                 <div class="d-flex justify-content-between align-items-center gap-3 flex-wrap ct_mb_32">
                     <div class="d-flex flex-wrap gap-3 align-items-center">
                         <div>
-                            <img src="img/seller-det-car.png" alt="" class="ct_img_60">
+                            <img [src]="reportData.profileImage || 'img/user-f.jpg'" onerror="this.src='img/user-f.jpg'"
+                                alt="" class="ct_img_60">
                         </div>
                         <div>
-                            <h3 class="ct_fs_18 ct_fw_600 mb-0">Emily Parker</h3>
-                            <p class="ct_text_para mb-0">emily123gmail.com</p>
-
+                            <h3 class="ct_fs_18 ct_fw_600 mb-0">{{ reportData.fullName }}</h3>
+                            <p class="ct_text_para mb-0">{{ reportData.email }}</p>
                         </div>
                     </div>
-                    <div class=""> <button class="btn-status ct_pending">Status: Pending </button></div>
-                    <!-- approved badge -->
-                    <!-- <div class=""> <button class="btn-status ct_approved">Status: Action Taken</button></div> -->
+                    <div class=""> <button class="btn-status ct_pending text-uppercase">Status: Pending </button></div>
                 </div>
-
                 <div class="mb-5">
                     <div class="ct_fw_500 ct_fs_16 mb-2">
-                        <span class="ct_fw_600 ct_text_para">Report reason:</span>
-                        Wrong Photos / Documents
+                        <span class="ct_fw_600 ct_text_para">User Type:</span>
+                        {{ reportData.account_type | titlecase }}
                     </div>
-
+                    <div class="ct_fw_500 ct_fs_16 mb-2">
+                        <span class="ct_fw_600 ct_text_para">Report reason:</span>
+                        {{ getReportedAs(reportData.reported_as) }}
+                    </div>
                 </div>
                 <div class="d-flex flex-wrap justify-content-between gap-3 align-items-end">
                     <div class="d-flex flex-wrap gap-4 align-items-center">
                         <div>
-                            <img src="img/seller-det-car.png" alt="" class="ct_border_radius_8 w-auto object-fit-cover"
-                                style="max-height: 96px ;">
+                            <img [src]="(reportData.images && reportData.images.length > 0) ? reportData.images[0].images : 'img/no_car.png'"
+                                onerror="this.src='img/no_car.png'" alt=""
+                                class="ct_border_radius_8 w-auto object-fit-cover" style="max-height: 96px ;">
                         </div>
                         <div>
-                            <h3 class="ct_fs_20 ct_fw_600 mb-3">Mersedes-Bens C-Class</h3>
-
-                            <div class="d-flex gap-2 align-items-center mb-1">
-                                <img src="img/user-f.jpg" alt="" class="ct_img_20">
-                                <p class="ct_text_para ct_fs_14 mb-0">Alton Rodriguez</p>
-                            </div>
-                            <p class="ct_text_para ct_fs_14 mb-0">altonrodriguezgmail.com </p>
-                            <p class="ct_text_para ct_fs_14 mb-0">+44 1234567891 </p>
+                            <h3 class="ct_fs_20 ct_fw_600 mb-3">{{ reportData.brandName }} {{ reportData.carModel }}
+                            </h3>
+                            <p class="ct_text_para ct_fs_14 mb-1"><strong>Price:</strong> {{ reportData.selling_price |
+                                currency:'CHF':'symbol':'1.0-0' }} </p>
+                            <p class="ct_text_para ct_fs_14 mb-0"><strong>Reg Number:</strong> {{
+                                reportData.registration_master_number || '-' }} </p>
                         </div>
                     </div>
                     <div>
-                        <button class="ct_gradient_btn d-flex align-items-center px-3">
+                        <button (click)="deleteReportedCar()" class="ct_gradient_btn d-flex align-items-center px-3"
+                            [disabled]="loading">
                             <svg class="me-1" width="19" height="19" viewBox="0 0 19 19" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
-                                    d="M7.91602 4.15641V4.35433H11.0827V4.15641C11.0827 3.73649 10.9159 3.33376 10.6189 3.03683C10.322 2.73989 9.91928 2.57308 9.49935 2.57308C9.07942 2.57308 8.6767 2.73989 8.37976 3.03683C8.08283 3.33376 7.91602 3.73649 7.91602 4.15641ZM6.92643 4.35433V4.15641C6.92643 3.47403 7.19751 2.8196 7.68002 2.33709C8.16254 1.85457 8.81697 1.5835 9.49935 1.5835C10.1817 1.5835 10.8362 1.85457 11.3187 2.33709C11.8012 2.8196 12.0723 3.47403 12.0723 4.15641V4.35433H16.5254C16.6566 4.35433 16.7825 4.40646 16.8753 4.49925C16.9681 4.59204 17.0202 4.71789 17.0202 4.84912C17.0202 4.98035 16.9681 5.1062 16.8753 5.19899C16.7825 5.29178 16.6566 5.34391 16.5254 5.34391H15.3707L14.5791 14.7869C14.5189 15.504 14.1916 16.1723 13.6619 16.6594C13.1322 17.1465 12.4388 17.4169 11.7192 17.4168H7.27952C6.55997 17.4168 5.8667 17.1464 5.33708 16.6593C4.80747 16.1722 4.48016 15.5039 4.42002 14.7869L3.62835 5.34391H2.47331C2.34208 5.34391 2.21623 5.29178 2.12344 5.19899C2.03065 5.1062 1.97852 4.98035 1.97852 4.84912C1.97852 4.71789 2.03065 4.59204 2.12344 4.49925C2.21623 4.40646 2.34208 4.35433 2.47331 4.35433H6.92643ZM5.40604 14.7042C5.44544 15.174 5.65988 15.6118 6.00688 15.9309C6.35387 16.2501 6.80808 16.4272 7.27952 16.4272H11.7192C12.1907 16.4273 12.645 16.2502 12.9921 15.9311C13.3392 15.6119 13.5537 15.174 13.5931 14.7042L14.3776 5.34391H4.6211L5.40604 14.7042ZM8.50977 8.01579C8.50977 7.95081 8.49697 7.88647 8.4721 7.82644C8.44724 7.76641 8.41079 7.71186 8.36485 7.66592C8.3189 7.61997 8.26435 7.58353 8.20432 7.55866C8.14429 7.53379 8.07995 7.521 8.01497 7.521C7.95 7.521 7.88566 7.53379 7.82563 7.55866C7.7656 7.58353 7.71105 7.61997 7.6651 7.66592C7.61916 7.71186 7.58271 7.76641 7.55785 7.82644C7.53298 7.88647 7.52018 7.95081 7.52018 8.01579V13.7554C7.52018 13.8203 7.53298 13.8847 7.55785 13.9447C7.58271 14.0048 7.61916 14.0593 7.6651 14.1052C7.71105 14.1512 7.7656 14.1876 7.82563 14.2125C7.88566 14.2374 7.95 14.2502 8.01497 14.2502C8.07995 14.2502 8.14429 14.2374 8.20432 14.2125C8.26435 14.1876 8.3189 14.1512 8.36485 14.1052C8.41079 14.0593 8.44724 14.0048 8.4721 13.9447C8.49697 13.8847 8.50977 13.8203 8.50977 13.7554V8.01579ZM10.9837 7.521C11.2569 7.521 11.4785 7.74266 11.4785 8.01579V13.7554C11.4785 13.8866 11.4264 14.0125 11.3336 14.1052C11.2408 14.198 11.115 14.2502 10.9837 14.2502C10.8525 14.2502 10.7266 14.198 10.6339 14.1052C10.5411 14.0125 10.4889 13.8866 10.4889 13.7554V8.01579C10.4889 7.74266 10.7106 7.521 10.9837 7.521Z"
+                                    d="M7.91602 4.15641V4.35433H11.0827V4.15641C11.0827 3.73649 10.9159 3.33376 10.6189 3.03683C10.322 2.73989 9.91928 2.57308 9.49935 2.57308C9.07942 2.57308 8.6767 2.73989 8.37976 3.03683C8.08283 3.33376 7.91602 3.73649 7.91602 4.15641ZM6.92643 4.35433V4.15641C6.92643 3.47403 7.19751 2.8196 7.68002 2.33709C8.16254 1.85457 8.81697 1.5835 9.49935 1.5835C10.1817 1.5835 10.8362 1.85457 11.3187 2.33709C11.8012 2.8196 12.0723 3.47403 12.0723 4.15641V4.35433H16.5254C16.6566 4.35433 16.7825 4.40646 16.8753 4.49925C16.9681 4.59204 17.0202 4.71789 17.0202 4.84912C17.0202 4.98035 16.9681 5.1062 16.8753 5.19899C16.7825 5.29178 16.6566 5.34391 16.5254 5.34391H15.3707L14.5791 14.7869C14.5189 15.504 14.1916 16.1723 13.6619 16.6594C13.1322 17.1465 12.4388 17.4169 11.7192 17.4168H7.27952C6.55997 17.4168 5.8667 17.1464 5.33708 16.6593C4.80747 16.1722 4.48016 15.5039 4.42002 14.7869L3.62835 5.34391H2.47331C2.34208 5.34391 2.21623 5.29178 2.68306 6.56694C2.56585 6.44973 2.5 6.29076 2.5 6.125C2.5 5.95924 2.56585 5.80027 2.68306 6.56694C2.80027 5.56585 2.95924 5.5 3.125 5.5H8.75ZM5.40604 14.7042C5.44544 15.174 5.65988 15.6118 6.00688 15.9309C6.35387 16.2501 6.80808 16.4272 7.27952 16.4272H11.7192C12.1907 16.4273 12.645 16.2502 12.9921 15.9311C13.3392 15.6119 13.5537 15.174 13.5931 14.7042L14.3776 5.34391H4.6211L5.40604 14.7042ZM8.50977 8.01579C8.50977 7.95081 8.49697 7.88647 8.4721 7.82644C8.44724 7.76641 8.41079 7.71186 8.36485 7.66592C8.3189 7.61997 8.26435 7.58353 8.20432 7.55866C8.14429 7.53379 8.07995 7.521 8.01497 7.521C7.95 7.521 7.88566 7.53379 7.82563 7.55866C7.7656 7.58353 7.71105 7.61997 7.6651 7.66592C7.61916 7.71186 7.58271 7.76641 7.55785 7.82644C7.53298 7.88647 7.52018 7.95081 7.52018 8.01579V13.7554C7.52018 13.8203 7.53298 13.8847 7.55785 13.9447C7.58271 14.0048 7.61916 14.0593 7.6651 14.1052C7.71105 14.1512 7.7656 14.1876 7.82563 14.2125C7.88566 14.2374 7.95 14.2502 8.01497 14.2502C8.07995 14.2502 8.14429 14.2374 8.20432 14.2125C8.26435 14.1876 8.3189 14.1512 8.36485 14.1052C8.41079 14.0593 8.44724 14.0048 8.4721 13.9447C8.49697 13.8847 8.50977 13.8203 8.50977 13.7554V8.01579ZM10.9837 7.521C11.2569 7.521 11.4785 7.74266 11.4785 8.01579V13.7554C11.4785 13.8866 11.4264 14.0125 11.3336 14.1052C11.2408 14.198 11.115 14.2502 10.9837 14.2502C10.8525 14.2502 10.7266 14.198 10.6339 14.1052C10.5411 14.0125 10.4889 13.8866 10.4889 13.7554V8.01579C10.4889 7.74266 10.7106 7.521 10.9837 7.521Z"
                                     fill="white" />
                             </svg>
-
                             Delete Listing
                         </button>
                     </div>
                 </div>
-                <div>
-
-
-                </div>
-
             </div>
-
-
+            <div *ngIf="!reportData && !loading" class="text-center mt-5">
+                <p class="ct_fs_15">Report details not found</p>
+                <a routerLink="/home/report" class="btn btn-primary mt-2">Back to Reports</a>
+            </div>
+            <div *ngIf="loading" class="text-center mt-5">
+                <p class="ct_fs_15">Loading...</p>
+            </div>
             <!-- end -->
         </div>
     </div>

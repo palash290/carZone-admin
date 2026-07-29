@@ -17,20 +17,28 @@
 
 
 
-            <div class="ct_mt_50 bg-white ct_border_radius_8 ct_box_shadow_25 ct_p_30 ct_576_p_20">
-                <div class="ct_mb_35 text-end"> <button class="btn-status ct_approved">Status: Approved</button></div>
+            <div *ngIf="requestData" class="ct_mt_50 bg-white ct_border_radius_8 ct_box_shadow_25 ct_p_30 ct_576_p_20">
+                <div class="ct_mb_35 text-end">
+                    <button [ngClass]="{
+                        'ct_approved': requestData.status === 'completed' || requestData.status === 'confirmed',
+                        'ct_pending': requestData.status === 'pending',
+                        'ct_rejected': requestData.status === 'rejected' || requestData.status === 'cancelled'
+                    }" class="btn-status text-uppercase">
+                        Status: {{ requestData.status }}
+                    </button>
+                </div>
                 <div class="row gy-4">
                     <div class="col-xl-4 col-md-6">
                         <div class="ct_bg_light_red ct_p_20 ct_border_radius_14 h-100">
                             <h2 class="ct_fs_20 ct_fw_600 mb-3">Buyer</h2>
                             <div class="d-flex flex-wrap gap-2">
                                 <div>
-                                    <img src="img/user-f.jpg" alt="" class="ct_img_60">
+                                    <img [src]="requestData.buyer?.profile_image || 'img/user-f.jpg'" onerror="this.src='img/user-f.jpg'" alt="" class="ct_img_60">
                                 </div>
                                 <div>
-                                    <h5 class="ct_fs_16 ct_fw_600 mb-1 text-break">Sarah Johnson</h5>
-                                    <p class="ct_fs_14 ct_text_para mb-1 text-break">sarah.jexample.com</p>
-                                    <p class="ct_fs_14 ct_text_para mb-0">+44 1234567891</p>
+                                    <h5 class="ct_fs_16 ct_fw_600 mb-1 text-break">{{ requestData.buyer?.name || '-' }}</h5>
+                                    <p class="ct_fs_14 ct_text_para mb-1 text-break">{{ requestData.buyer?.email || '-' }}</p>
+                                    <p class="ct_fs_14 ct_text_para mb-0">{{ requestData.buyer?.phone || '-' }}</p>
                                 </div>
                             </div>
                         </div>
@@ -41,14 +49,18 @@
                             <div class="d-flex flex-wrap gap-4 justify-content-center mb-3">
                                 <div>
                                     <h4 class="ct_fs_15 ct_fw_400 ct_text_para mb-0">Date</h4>
-                                    <h3 class="ct_fs_18 ct_fw_500 mb-0">15 Feb 2025</h3>
+                                    <h3 class="ct_fs_18 ct_fw_500 mb-0">{{ requestData.visit?.date || '-' }}</h3>
                                 </div>
                                 <div>
                                     <h4 class="ct_fs_15 ct_fw_400 ct_text_para mb-0">Time</h4>
-                                    <h3 class="ct_fs_18 ct_fw_500 mb-0">4:00 PM</h3>
+                                    <h3 class="ct_fs_18 ct_fw_500 mb-0">{{ requestData.visit?.time || '-' }}</h3>
                                 </div>
                             </div>
-                            <p class="ct_fs_14 ct_fw_500 mb-0 text-center">Via Serlas 23, 7500 St. Moritz, Switzerland
+                            <p class="ct_fs_14 ct_fw_500 mb-0 text-center">
+                                {{ requestData.buyer?.address }}
+                                <span *ngIf="requestData.buyer?.address && requestData.buyer?.city">, </span>
+                                {{ requestData.buyer?.city }}
+                                <span *ngIf="!requestData.buyer?.address && !requestData.buyer?.city">-</span>
                             </p>
                         </div>
                     </div>
@@ -57,12 +69,12 @@
                             <h2 class="ct_fs_20 ct_fw_600 mb-3">Seller</h2>
                             <div class="d-flex flex-wrap gap-2">
                                 <div>
-                                    <img src="img/user.jpg" alt="" class="ct_img_60">
+                                    <img [src]="requestData.seller?.profile_image || 'img/user.jpg'" onerror="this.src='img/user.jpg'" alt="" class="ct_img_60">
                                 </div>
                                 <div>
-                                    <h5 class="ct_fs_16 ct_fw_600 mb-1 text-break">Alton Rodriguez </h5>
-                                    <p class="ct_fs_14 ct_text_para mb-1 text-break">altonrodriguezgmail.com</p>
-                                    <p class="ct_fs_14 ct_text_para mb-0">+44 1234567891</p>
+                                    <h5 class="ct_fs_16 ct_fw_600 mb-1 text-break">{{ requestData.seller?.name || '-' }}</h5>
+                                    <p class="ct_fs_14 ct_text_para mb-1 text-break">{{ requestData.seller?.email || '-' }}</p>
+                                    <p class="ct_fs_14 ct_text_para mb-0">{{ requestData.seller?.phone || '-' }}</p>
                                 </div>
                             </div>
                         </div>
@@ -73,39 +85,38 @@
                     <h3 class="ct_fw_600 ct_fs_18 mb-4">Car Details</h3>
                     <div class="d-flex ct_flex_col_767 gap-5 align-items-center">
                         <div>
-                            <img src="img/seller-det-car.png" alt="" class="ct_border_radius_8 w-auto object-fit-cover"
+                            <img [src]="requestData.car?.image || 'img/no_car.png'" onerror="this.src='img/no_car.png'" alt="" class="ct_border_radius_8 w-auto object-fit-cover"
                                 style="max-height: 140px ;">
                         </div>
                         <div>
-                            <h3 class="ct_fs_20 ct_fw_600 mb-3">Mersedes-Bens C-Class</h3>
+                            <h3 class="ct_fs_20 ct_fw_600 mb-3">{{ requestData.car?.title || '-' }}</h3>
                             <ul class="d-flex ct_flex_col_575 flex-wrap gap-3 p-0 mb-3">
-                                <li class="ct_fs_16 ct_fw_400 ct_text_para d-flex align-items-center gap-3">
+                                <li *ngIf="requestData.car?.mileage" class="ct_fs_16 ct_fw_400 ct_text_para d-flex align-items-center gap-3">
                                     <span class="dot ct_dot_grey"></span>
-                                    7.2023
+                                    Mileage: {{ requestData.car.mileage }} km
                                 </li>
-                                <li class="ct_fs_16 ct_fw_400 ct_text_para d-flex align-items-center gap-3">
+                                <li *ngIf="requestData.car?.fuel_type" class="ct_fs_16 ct_fw_400 ct_text_para d-flex align-items-center gap-3">
                                     <span class="dot ct_dot_grey"></span>
-                                    15’000 km
+                                    Fuel: {{ requestData.car.fuel_type | titlecase }}
                                 </li>
-                                <li class="ct_fs_16 ct_fw_400 ct_text_para  d-flex align-items-center gap-3">
-                                    <span class="dot ct_dot_grey"></span> Benzin
+                                <li *ngIf="requestData.car?.body_type" class="ct_fs_16 ct_fw_400 ct_text_para d-flex align-items-center gap-3">
+                                    <span class="dot ct_dot_grey"></span>
+                                    Body: {{ requestData.car.body_type | titlecase }}
                                 </li>
                             </ul>
-                            <ul class="d-flex ct_flex_col_575 gap-3 p-0 mb-3">
-                                <li class="ct_fs_16 ct_fw_400 ct_text_para d-flex align-items-center gap-3"><span
-                                        class="dot ct_dot_grey"></span> 7.2023</li>
-                                <li class="ct_fs_16 ct_fw_400 ct_text_para d-flex align-items-center gap-3">
-                                    <span class="dot ct_dot_grey"></span>
-                                    15’000 km
-                                </li>
-                                <li class="ct_fs_16 ct_fw_400 ct_text_para  d-flex align-items-center gap-3">
-                                    <span class="dot ct_dot_grey"></span> Benzin
-                                </li>
-                            </ul>
-                            <h4 class="ct_fs_22 ct_fw_700 ct_text_primary">CHF 45’900</h4>
+                            <h4 *ngIf="requestData.car?.price" class="ct_fs_22 ct_fw_700 ct_text_primary">
+                                {{ requestData.car.price | currency:'CHF':'symbol':'1.0-0' }}
+                            </h4>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div *ngIf="!requestData && !loading" class="text-center mt-5">
+                <p class="ct_fs_15">Request details not found</p>
+                <a routerLink="/home/requests" class="btn btn-primary mt-2">Back to Requests</a>
+            </div>
+            <div *ngIf="loading" class="text-center mt-5">
+                <p class="ct_fs_15">Loading...</p>
             </div>
 
 

@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonService } from '../../services/common.service';
-import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
   selector: 'app-transactions',
-  imports: [RouterLink, CommonModule, FormsModule, NgxPaginationModule],
+  imports: [CommonModule, FormsModule, NgxPaginationModule],
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.css'
 })

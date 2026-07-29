@@ -104,64 +104,64 @@ export class CompanyComponent {
     this.companyId = item.id;
   }
 
-    handleCheckboxChange(row: any) {
-      if (row.isBlocked == 1) {
-        Swal.fire({
-          title: "Are you sure?",
-          text: "You want to unblock this buyer!",
-          icon: "success",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Yes!",
-          cancelButtonText: "No"
-        }).then((result) => {
-          if (result.isConfirmed) {
-            const formURlData = new URLSearchParams();
-            //console.log()
-            formURlData.set('user_id', row.id);
-            formURlData.set('role', 'buyer');
-            formURlData.set('isBlocked', '0');
-            this.service.post(`blocked1`, formURlData).subscribe({
-              next: (resp: any) => {
-                this.toastr.success(resp.message);
-                this.getCompanyList();
-              }
-            })
-          } else {
-            //this.toastr.warning('Something went wrong!');
-            this.getCompanyList();
-          }
-        });
-      } else {
-        Swal.fire({
-          title: "Are you sure?",
-          text: "You want to block this buyer!",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Yes!",
-          cancelButtonText: "No"
-        }).then((result) => {
-          if (result.isConfirmed) {
-            const formURlData = new URLSearchParams();
-            formURlData.set('user_id', row.id);
-            formURlData.set('role', 'buyer');
-            formURlData.set('isBlocked', '1');
-            this.service.post(`blocked1`, formURlData).subscribe({
-              next: (resp: any) => {
-                this.toastr.success(resp.message);
-                this.getCompanyList();
-              }
-            })
-          } else {
-            //this.toastr.warning('Something went wrong!');
-            this.getCompanyList();
-          }
-        });
-      }
+  handleCheckboxChange(row: any) {
+    if (row.isBlocked == 1) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You want to unblock this buyer!",
+        icon: "success",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes!",
+        cancelButtonText: "No"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const formURlData = new URLSearchParams();
+          //console.log()
+          formURlData.set('user_id', row.id);
+          formURlData.set('role', 'buyer');
+          formURlData.set('isBlocked', '0');
+          this.service.post(`blocked1`, formURlData).subscribe({
+            next: (resp: any) => {
+              this.toastr.success(resp.message);
+              this.getCompanyList();
+            }
+          })
+        } else {
+          //this.toastr.warning('Something went wrong!');
+          this.getCompanyList();
+        }
+      });
+    } else {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You want to block this buyer!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes!",
+        cancelButtonText: "No"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const formURlData = new URLSearchParams();
+          formURlData.set('user_id', row.id);
+          formURlData.set('role', 'buyer');
+          formURlData.set('isBlocked', '1');
+          this.service.post(`blocked1`, formURlData).subscribe({
+            next: (resp: any) => {
+              this.toastr.success(resp.message);
+              this.getCompanyList();
+            }
+          })
+        } else {
+          //this.toastr.warning('Something went wrong!');
+          this.getCompanyList();
+        }
+      });
     }
+  }
 
 
 }
