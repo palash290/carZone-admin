@@ -30,14 +30,14 @@
                                 </div>
                             </div>
                             <h5 class="ct_fs_18 ct_fw_700 mb-3">
-                                First Car Listing
+                                First Car Listing ({{ basicPlan?.name || '-' }})
                             </h5>
                             <div class="position-relative">
                                 <span class="ct_fs_14 ct_fw_700 ct_text_para ct_show_left">CHF</span>
-                                <input type="text" class="form-control ct_input ps-5" placeholder="1.00.–">
+                                <input type="text" class="form-control ct_input ps-5" placeholder="1.00.–" [value]="stripCurrency(basicPlan?.price)" disabled>
 
                             </div>
-                            <button class="ct_btn_primary mt-4 w-100">Save Changes</button>
+                            <!-- <button class="ct_btn_primary mt-4 w-100">Save Changes</button> -->
                         </div>
                     </div>
 
@@ -59,14 +59,14 @@
                                 </div>
                             </div>
                             <h5 class="ct_fs_18 ct_fw_700 mb-3">
-                                Additional Car Price
+                                Additional Car Price ({{ additionalPlan?.name || '-' }})
                             </h5>
                             <div class="position-relative">
                                 <span class="ct_fs_14 ct_fw_700 ct_text_para ct_show_left">CHF</span>
-                                <input type="text" class="form-control ct_input ps-5" placeholder="1.00.–">
+                                <input type="text" class="form-control ct_input ps-5" placeholder="1.00.–" [value]="stripCurrency(additionalPlan?.price)" disabled>
 
                             </div>
-                            <button class="ct_btn_primary mt-4 w-100">Save Changes</button>
+                            <!-- <button class="ct_btn_primary mt-4 w-100">Save Changes</button> -->
                         </div>
                     </div>
                     <div class="col-xl-4 col-md-12">
@@ -109,7 +109,7 @@
 
 
                         </div>
-                        <div class="ct_width_100_575">
+                        <!-- <div class="ct_width_100_575">
                             <button class="ct_btn_black ct_width_100_575" data-bs-toggle="modal"
                                 data-bs-target="#add_slot_package_Modal">
                                 <svg class="me-2" width="11" height="11" viewBox="0 0 11 11" fill="none"
@@ -119,7 +119,7 @@
 
                                 Add Slot Package
                             </button>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
 
@@ -129,151 +129,43 @@
                     <div class="tab-pane fade show active" id="monthly-tab-pane" role="tabpanel"
                         aria-labelledby="monthly-tab" tabindex="0">
                         <div class="row gy-4">
-                            <div class="col-xl-4 col-md-6">
-                                <div class="ct_border_para ct_p_30 ct_border_radius_24 slot_package_box">
+                            <div *ngFor="let plan of monthlyPlans" class="col-xl-4 col-md-6">
+                                <div [class.active]="plan.slot_count === 15" class="ct_border_para ct_p_30 ct_border_radius_24 slot_package_box">
                                     <div class="d-flex gap-2 justify-content-between align-items-start ct_mb_32">
                                         <div class="slot_icon_box">
-                                            <svg width="23" height="23" viewBox="0 0 23 23" fill="none"
+                                            <svg *ngIf="plan.slot_count <= 10" width="23" height="23" viewBox="0 0 23 23" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <path
                                                     d="M0 10V0H10V10H0ZM0 22.5V12.5H10V22.5H0ZM12.5 10V0H22.5V10H12.5ZM12.5 22.5V12.5H22.5V22.5H12.5ZM2.5 7.5H7.5V2.5H2.5V7.5ZM15 7.5H20V2.5H15V7.5ZM15 20H20V15H15V20ZM2.5 20H7.5V15H2.5V20Z"
-                                                    fill="#8F0C1F" />
+                                                    fill="currentColor" />
                                             </svg>
-
-                                        </div>
-                                        <span class="ct_green_oval_badge">ACTIVE</span>
-                                    </div>
-                                    <div class="ct_border_bottom_para ct_pb_32 mb-4">
-                                        <span class="ct_fs_28 ct_fw_800">10 </span>
-                                        <span class="ct_text_para ct_fs_24 ct_fw_400">Slots</span>
-                                        <p class="ct_fw_500 ct_fs_14 ct_text_para mb-0">Standard dealership
-                                            tier</p>
-                                    </div>
-                                    <div>
-                                        <p class="ct_fs_12 ct_fw_700 ct_text_para mb-1">PRICE PER MONTH</p>
-                                        <div class="d-flex justify-content-between flex-wrap gap-3">
-                                            <h3 class="ct_fs_20 ct_fw_700 ct_text_primary mb-0">CHF 299.50.–
-                                            </h3>
-                                            <div>
-                                                <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                    data-bs-target="#edit_slot_package_Modal">
-                                                    <svg width="31" height="31" viewBox="0 0 31 31" fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg">
-                                                        <path
-                                                            d="M9.66667 21.3333H10.8542L19 13.1875L17.8125 12L9.66667 20.1458V21.3333ZM8 23V19.4583L19 8.47917C19.1667 8.32639 19.3507 8.20833 19.5521 8.125C19.7535 8.04167 19.9653 8 20.1875 8C20.4097 8 20.625 8.04167 20.8333 8.125C21.0417 8.20833 21.2222 8.33333 21.375 8.5L22.5208 9.66667C22.6875 9.81944 22.809 10 22.8854 10.2083C22.9618 10.4167 23 10.625 23 10.8333C23 11.0556 22.9618 11.2674 22.8854 11.4688C22.809 11.6701 22.6875 11.8542 22.5208 12.0208L11.5417 23H8ZM21.3333 10.8333L20.1667 9.66667L21.3333 10.8333ZM18.3958 12.6042L17.8125 12L19 13.1875L18.3958 12.6042Z"
-                                                            fill="#919EAB" />
-                                                    </svg>
-                                                </a>
-                                                <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                    data-bs-target="#ct_delete_slot_modal_post"><svg width="30"
-                                                        height="31" viewBox="0 0 30 31" fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg">
-                                                        <path
-                                                            d="M10.5 23C10.0417 23 9.64931 22.8368 9.32292 22.5104C8.99653 22.184 8.83333 21.7917 8.83333 21.3333V10.5H8V8.83333H12.1667V8H17.1667V8.83333H21.3333V10.5H20.5V21.3333C20.5 21.7917 20.3368 22.184 20.0104 22.5104C19.684 22.8368 19.2917 23 18.8333 23H10.5ZM18.8333 10.5H10.5V21.3333H18.8333V10.5ZM12.1667 19.6667H13.8333V12.1667H12.1667V19.6667ZM15.5 19.6667H17.1667V12.1667H15.5V19.6667ZM10.5 10.5V21.3333V10.5Z"
-                                                            fill="#919EAB" />
-                                                    </svg>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-md-6">
-                                <div class="ct_border_para ct_p_30 ct_border_radius_24 slot_package_box active">
-                                    <div class="d-flex gap-2 justify-content-between align-items-start ct_mb_32">
-                                        <div class="slot_icon_box">
-                                            <svg width="20" height="27" viewBox="0 0 20 27" fill="none"
+                                            <svg *ngIf="plan.slot_count === 15" width="20" height="27" viewBox="0 0 20 27" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <path
                                                     d="M7.09375 14.625L8.1875 11.0625L5.3125 8.75H8.875L10 5.25L11.125 8.75H14.6875L11.7812 11.0625L12.875 14.625L10 12.4062L7.09375 14.625ZM2.5 26.25V16.5938C1.70833 15.7188 1.09375 14.7188 0.65625 13.5938C0.21875 12.4688 0 11.2708 0 10C0 7.20833 0.96875 4.84375 2.90625 2.90625C4.84375 0.96875 7.20833 0 10 0C12.7917 0 15.1562 0.96875 17.0938 2.90625C19.0312 4.84375 20 7.20833 20 10C20 11.2708 19.7812 12.4688 19.3438 13.5938C18.9062 14.7188 18.2917 15.7188 17.5 16.5938V26.25L10 23.75L2.5 26.25ZM10 17.5C12.0833 17.5 13.8542 16.7708 15.3125 15.3125C16.7708 13.8542 17.5 12.0833 17.5 10C17.5 7.91667 16.7708 6.14583 15.3125 4.6875C13.8542 3.22917 12.0833 2.5 10 2.5C7.91667 2.5 6.14583 3.22917 4.6875 4.6875C3.22917 6.14583 2.5 7.91667 2.5 10C2.5 12.0833 3.22917 13.8542 4.6875 15.3125C6.14583 16.7708 7.91667 17.5 10 17.5Z"
-                                                    fill="white" />
+                                                    fill="currentColor" />
                                             </svg>
-
-
-                                        </div>
-                                        <span class="ct_green_oval_badge">ACTIVE</span>
-                                    </div>
-                                    <div class="ct_border_bottom_para ct_pb_32 mb-4">
-                                        <span class="ct_fs_28 ct_fw_800">10 </span>
-                                        <span class="ct_text_para ct_fs_24 ct_fw_400">Slots</span>
-                                        <p class="ct_fw_700 ct_fs_14 ct_text_primary mb-0">Most Popular
-                                            Choice</p>
-                                    </div>
-                                    <div>
-                                        <p class="ct_fs_12 ct_fw_700 ct_text_para mb-1">PRICE PER MONTH</p>
-                                        <div class="d-flex justify-content-between flex-wrap gap-3">
-                                            <h3 class="ct_fs_20 ct_fw_700 ct_text_primary mb-0">CHF 299.50.–
-                                            </h3>
-                                            <div>
-                                                <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                    data-bs-target="#edit_slot_package_Modal">
-                                                    <svg width="31" height="31" viewBox="0 0 31 31" fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg">
-                                                        <path
-                                                            d="M9.66667 21.3333H10.8542L19 13.1875L17.8125 12L9.66667 20.1458V21.3333ZM8 23V19.4583L19 8.47917C19.1667 8.32639 19.3507 8.20833 19.5521 8.125C19.7535 8.04167 19.9653 8 20.1875 8C20.4097 8 20.625 8.04167 20.8333 8.125C21.0417 8.20833 21.2222 8.33333 21.375 8.5L22.5208 9.66667C22.6875 9.81944 22.809 10 22.8854 10.2083C22.9618 10.4167 23 10.625 23 10.8333C23 11.0556 22.9618 11.2674 22.8854 11.4688C22.809 11.6701 22.6875 11.8542 22.5208 12.0208L11.5417 23H8ZM21.3333 10.8333L20.1667 9.66667L21.3333 10.8333ZM18.3958 12.6042L17.8125 12L19 13.1875L18.3958 12.6042Z"
-                                                            fill="#919EAB" />
-                                                    </svg>
-                                                </a>
-                                                <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                    data-bs-target="#ct_delete_slot_modal_post"><svg width="30"
-                                                        height="31" viewBox="0 0 30 31" fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg">
-                                                        <path
-                                                            d="M10.5 23C10.0417 23 9.64931 22.8368 9.32292 22.5104C8.99653 22.184 8.83333 21.7917 8.83333 21.3333V10.5H8V8.83333H12.1667V8H17.1667V8.83333H21.3333V10.5H20.5V21.3333C20.5 21.7917 20.3368 22.184 20.0104 22.5104C19.684 22.8368 19.2917 23 18.8333 23H10.5ZM18.8333 10.5H10.5V21.3333H18.8333V10.5ZM12.1667 19.6667H13.8333V12.1667H12.1667V19.6667ZM15.5 19.6667H17.1667V12.1667H15.5V19.6667ZM10.5 10.5V21.3333V10.5Z"
-                                                            fill="#919EAB" />
-                                                    </svg>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-md-6">
-                                <div class="ct_border_para ct_p_30 ct_border_radius_24 slot_package_box">
-                                    <div class="d-flex gap-2 justify-content-between align-items-start ct_mb_32">
-                                        <div class="slot_icon_box">
-                                            <svg width="25" height="23" viewBox="0 0 25 23" fill="none"
+                                            <svg *ngIf="plan.slot_count >= 20" width="25" height="23" viewBox="0 0 25 23" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <path
                                                     d="M0 22.5V0H12.5V5H25V22.5H0ZM2.5 20H10V17.5H2.5V20ZM2.5 15H10V12.5H2.5V15ZM2.5 10H10V7.5H2.5V10ZM2.5 5H10V2.5H2.5V5ZM12.5 20H22.5V7.5H12.5V20ZM15 12.5V10H20V12.5H15ZM15 17.5V15H20V17.5H15Z"
-                                                    fill="#8F0C1F" />
+                                                    fill="currentColor" />
                                             </svg>
-
-
                                         </div>
                                         <span class="ct_green_oval_badge">ACTIVE</span>
                                     </div>
                                     <div class="ct_border_bottom_para ct_pb_32 mb-4">
-                                        <span class="ct_fs_28 ct_fw_800">20 </span>
+                                        <span class="ct_fs_28 ct_fw_800">{{ plan.slot_count }} </span>
                                         <span class="ct_text_para ct_fs_24 ct_fw_400">Slots</span>
-                                        <p class="ct_fw_500 ct_fs_14 ct_text_para mb-0">Enterprise volume
-                                            package</p>
+                                        <p [ngClass]="{'ct_fw_700 ct_text_primary': plan.slot_count === 15, 'ct_fw_500 ct_text_para': plan.slot_count !== 15}" class="ct_fs_14 mb-0">
+                                            {{ plan.slot_count === 15 ? 'Most Popular Choice' : (plan.slot_count <= 10 ? 'Standard dealership tier' : 'Enterprise volume package') }}
+                                        </p>
                                     </div>
                                     <div>
                                         <p class="ct_fs_12 ct_fw_700 ct_text_para mb-1">PRICE PER MONTH</p>
                                         <div class="d-flex justify-content-between flex-wrap gap-3">
-                                            <h3 class="ct_fs_20 ct_fw_700 ct_text_primary mb-0">CHF 299.50.–
-                                            </h3>
-                                            <div>
-                                                <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                    data-bs-target="#edit_slot_package_Modal">
-                                                    <svg width="31" height="31" viewBox="0 0 31 31" fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg">
-                                                        <path
-                                                            d="M9.66667 21.3333H10.8542L19 13.1875L17.8125 12L9.66667 20.1458V21.3333ZM8 23V19.4583L19 8.47917C19.1667 8.32639 19.3507 8.20833 19.5521 8.125C19.7535 8.04167 19.9653 8 20.1875 8C20.4097 8 20.625 8.04167 20.8333 8.125C21.0417 8.20833 21.2222 8.33333 21.375 8.5L22.5208 9.66667C22.6875 9.81944 22.809 10 22.8854 10.2083C22.9618 10.4167 23 10.625 23 10.8333C23 11.0556 22.9618 11.2674 22.8854 11.4688C22.809 11.6701 22.6875 11.8542 22.5208 12.0208L11.5417 23H8ZM21.3333 10.8333L20.1667 9.66667L21.3333 10.8333ZM18.3958 12.6042L17.8125 12L19 13.1875L18.3958 12.6042Z"
-                                                            fill="#919EAB" />
-                                                    </svg>
-                                                </a>
-                                                <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                    data-bs-target="#ct_delete_slot_modal_post"><svg width="30"
-                                                        height="31" viewBox="0 0 30 31" fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg">
-                                                        <path
-                                                            d="M10.5 23C10.0417 23 9.64931 22.8368 9.32292 22.5104C8.99653 22.184 8.83333 21.7917 8.83333 21.3333V10.5H8V8.83333H12.1667V8H17.1667V8.83333H21.3333V10.5H20.5V21.3333C20.5 21.7917 20.3368 22.184 20.0104 22.5104C19.684 22.8368 19.2917 23 18.8333 23H10.5ZM18.8333 10.5H10.5V21.3333H18.8333V10.5ZM12.1667 19.6667H13.8333V12.1667H12.1667V19.6667ZM15.5 19.6667H17.1667V12.1667H15.5V19.6667ZM10.5 10.5V21.3333V10.5Z"
-                                                            fill="#919EAB" />
-                                                    </svg>
-                                                </a>
-                                            </div>
+                                            <h3 class="ct_fs_20 ct_fw_700 ct_text_primary mb-0">CHF {{ stripCurrency(plan.price) }}.–</h3>
+                                            <!-- Triggers commented out -->
                                         </div>
                                     </div>
                                 </div>
@@ -283,151 +175,43 @@
                     <div class="tab-pane fade" id="yearly-tab-pane" role="tabpanel" aria-labelledby="yearly-tab"
                         tabindex="0">
                         <div class="row">
-                            <div class="col-xl-4 col-md-6">
-                                <div class="ct_border_para ct_p_30 ct_border_radius_24 slot_package_box">
+                            <div *ngFor="let plan of yearlyPlans" class="col-xl-4 col-md-6">
+                                <div [class.active]="plan.slot_count === 170" class="ct_border_para ct_p_30 ct_border_radius_24 slot_package_box">
                                     <div class="d-flex gap-2 justify-content-between align-items-start ct_mb_32">
                                         <div class="slot_icon_box">
-                                            <svg width="23" height="23" viewBox="0 0 23 23" fill="none"
+                                            <svg *ngIf="plan.slot_count <= 120" width="23" height="23" viewBox="0 0 23 23" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <path
                                                     d="M0 10V0H10V10H0ZM0 22.5V12.5H10V22.5H0ZM12.5 10V0H22.5V10H12.5ZM12.5 22.5V12.5H22.5V22.5H12.5ZM2.5 7.5H7.5V2.5H2.5V7.5ZM15 7.5H20V2.5H15V7.5ZM15 20H20V15H15V20ZM2.5 20H7.5V15H2.5V20Z"
-                                                    fill="#8F0C1F" />
+                                                    fill="currentColor" />
                                             </svg>
-
-                                        </div>
-                                        <span class="ct_green_oval_badge">ACTIVE</span>
-                                    </div>
-                                    <div class="ct_border_bottom_para ct_pb_32 mb-4">
-                                        <span class="ct_fs_28 ct_fw_800">10 </span>
-                                        <span class="ct_text_para ct_fs_24 ct_fw_400">Slots</span>
-                                        <p class="ct_fw_500 ct_fs_14 ct_text_para mb-0">Standard dealership
-                                            tier</p>
-                                    </div>
-                                    <div>
-                                        <p class="ct_fs_12 ct_fw_700 ct_text_para mb-1">PRICE PER YEAR</p>
-                                        <div class="d-flex justify-content-between flex-wrap gap-3">
-                                            <h3 class="ct_fs_20 ct_fw_700 ct_text_primary mb-0">CHF 299.50.–
-                                            </h3>
-                                            <div>
-                                                <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                    data-bs-target="#edit_slot_package_Modal">
-                                                    <svg width="31" height="31" viewBox="0 0 31 31" fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg">
-                                                        <path
-                                                            d="M9.66667 21.3333H10.8542L19 13.1875L17.8125 12L9.66667 20.1458V21.3333ZM8 23V19.4583L19 8.47917C19.1667 8.32639 19.3507 8.20833 19.5521 8.125C19.7535 8.04167 19.9653 8 20.1875 8C20.4097 8 20.625 8.04167 20.8333 8.125C21.0417 8.20833 21.2222 8.33333 21.375 8.5L22.5208 9.66667C22.6875 9.81944 22.809 10 22.8854 10.2083C22.9618 10.4167 23 10.625 23 10.8333C23 11.0556 22.9618 11.2674 22.8854 11.4688C22.809 11.6701 22.6875 11.8542 22.5208 12.0208L11.5417 23H8ZM21.3333 10.8333L20.1667 9.66667L21.3333 10.8333ZM18.3958 12.6042L17.8125 12L19 13.1875L18.3958 12.6042Z"
-                                                            fill="#919EAB" />
-                                                    </svg>
-                                                </a>
-                                                <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                    data-bs-target="#ct_delete_slot_modal_post"><svg width="30"
-                                                        height="31" viewBox="0 0 30 31" fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg">
-                                                        <path
-                                                            d="M10.5 23C10.0417 23 9.64931 22.8368 9.32292 22.5104C8.99653 22.184 8.83333 21.7917 8.83333 21.3333V10.5H8V8.83333H12.1667V8H17.1667V8.83333H21.3333V10.5H20.5V21.3333C20.5 21.7917 20.3368 22.184 20.0104 22.5104C19.684 22.8368 19.2917 23 18.8333 23H10.5ZM18.8333 10.5H10.5V21.3333H18.8333V10.5ZM12.1667 19.6667H13.8333V12.1667H12.1667V19.6667ZM15.5 19.6667H17.1667V12.1667H15.5V19.6667ZM10.5 10.5V21.3333V10.5Z"
-                                                            fill="#919EAB" />
-                                                    </svg>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-md-6">
-                                <div class="ct_border_para ct_p_30 ct_border_radius_24 slot_package_box active">
-                                    <div class="d-flex gap-2 justify-content-between align-items-start ct_mb_32">
-                                        <div class="slot_icon_box">
-                                            <svg width="20" height="27" viewBox="0 0 20 27" fill="none"
+                                            <svg *ngIf="plan.slot_count === 170" width="20" height="27" viewBox="0 0 20 27" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <path
                                                     d="M7.09375 14.625L8.1875 11.0625L5.3125 8.75H8.875L10 5.25L11.125 8.75H14.6875L11.7812 11.0625L12.875 14.625L10 12.4062L7.09375 14.625ZM2.5 26.25V16.5938C1.70833 15.7188 1.09375 14.7188 0.65625 13.5938C0.21875 12.4688 0 11.2708 0 10C0 7.20833 0.96875 4.84375 2.90625 2.90625C4.84375 0.96875 7.20833 0 10 0C12.7917 0 15.1562 0.96875 17.0938 2.90625C19.0312 4.84375 20 7.20833 20 10C20 11.2708 19.7812 12.4688 19.3438 13.5938C18.9062 14.7188 18.2917 15.7188 17.5 16.5938V26.25L10 23.75L2.5 26.25ZM10 17.5C12.0833 17.5 13.8542 16.7708 15.3125 15.3125C16.7708 13.8542 17.5 12.0833 17.5 10C17.5 7.91667 16.7708 6.14583 15.3125 4.6875C13.8542 3.22917 12.0833 2.5 10 2.5C7.91667 2.5 6.14583 3.22917 4.6875 4.6875C3.22917 6.14583 2.5 7.91667 2.5 10C2.5 12.0833 3.22917 13.8542 4.6875 15.3125C6.14583 16.7708 7.91667 17.5 10 17.5Z"
-                                                    fill="white" />
+                                                    fill="currentColor" />
                                             </svg>
-
-
-                                        </div>
-                                        <span class="ct_green_oval_badge">ACTIVE</span>
-                                    </div>
-                                    <div class="ct_border_bottom_para ct_pb_32 mb-4">
-                                        <span class="ct_fs_28 ct_fw_800">10 </span>
-                                        <span class="ct_text_para ct_fs_24 ct_fw_400">Slots</span>
-                                        <p class="ct_fw_700 ct_fs_14 ct_text_primary mb-0">Most Popular
-                                            Choice</p>
-                                    </div>
-                                    <div>
-                                        <p class="ct_fs_12 ct_fw_700 ct_text_para mb-1">PRICE PER YEAR</p>
-                                        <div class="d-flex justify-content-between flex-wrap gap-3">
-                                            <h3 class="ct_fs_20 ct_fw_700 ct_text_primary mb-0">CHF 299.50.–
-                                            </h3>
-                                            <div>
-                                                <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                    data-bs-target="#edit_slot_package_Modal">
-                                                    <svg width="31" height="31" viewBox="0 0 31 31" fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg">
-                                                        <path
-                                                            d="M9.66667 21.3333H10.8542L19 13.1875L17.8125 12L9.66667 20.1458V21.3333ZM8 23V19.4583L19 8.47917C19.1667 8.32639 19.3507 8.20833 19.5521 8.125C19.7535 8.04167 19.9653 8 20.1875 8C20.4097 8 20.625 8.04167 20.8333 8.125C21.0417 8.20833 21.2222 8.33333 21.375 8.5L22.5208 9.66667C22.6875 9.81944 22.809 10 22.8854 10.2083C22.9618 10.4167 23 10.625 23 10.8333C23 11.0556 22.9618 11.2674 22.8854 11.4688C22.809 11.6701 22.6875 11.8542 22.5208 12.0208L11.5417 23H8ZM21.3333 10.8333L20.1667 9.66667L21.3333 10.8333ZM18.3958 12.6042L17.8125 12L19 13.1875L18.3958 12.6042Z"
-                                                            fill="#919EAB" />
-                                                    </svg>
-                                                </a>
-                                                <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                    data-bs-target="#ct_delete_slot_modal_post"><svg width="30"
-                                                        height="31" viewBox="0 0 30 31" fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg">
-                                                        <path
-                                                            d="M10.5 23C10.0417 23 9.64931 22.8368 9.32292 22.5104C8.99653 22.184 8.83333 21.7917 8.83333 21.3333V10.5H8V8.83333H12.1667V8H17.1667V8.83333H21.3333V10.5H20.5V21.3333C20.5 21.7917 20.3368 22.184 20.0104 22.5104C19.684 22.8368 19.2917 23 18.8333 23H10.5ZM18.8333 10.5H10.5V21.3333H18.8333V10.5ZM12.1667 19.6667H13.8333V12.1667H12.1667V19.6667ZM15.5 19.6667H17.1667V12.1667H15.5V19.6667ZM10.5 10.5V21.3333V10.5Z"
-                                                            fill="#919EAB" />
-                                                    </svg>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-md-6">
-                                <div class="ct_border_para ct_p_30 ct_border_radius_24 slot_package_box">
-                                    <div class="d-flex gap-2 justify-content-between align-items-start ct_mb_32">
-                                        <div class="slot_icon_box">
-                                            <svg width="25" height="23" viewBox="0 0 25 23" fill="none"
+                                            <svg *ngIf="plan.slot_count >= 200" width="25" height="23" viewBox="0 0 25 23" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <path
                                                     d="M0 22.5V0H12.5V5H25V22.5H0ZM2.5 20H10V17.5H2.5V20ZM2.5 15H10V12.5H2.5V15ZM2.5 10H10V7.5H2.5V10ZM2.5 5H10V2.5H2.5V5ZM12.5 20H22.5V7.5H12.5V20ZM15 12.5V10H20V12.5H15ZM15 17.5V15H20V17.5H15Z"
-                                                    fill="#8F0C1F" />
+                                                    fill="currentColor" />
                                             </svg>
-
-
                                         </div>
                                         <span class="ct_green_oval_badge">ACTIVE</span>
                                     </div>
                                     <div class="ct_border_bottom_para ct_pb_32 mb-4">
-                                        <span class="ct_fs_28 ct_fw_800">20 </span>
+                                        <span class="ct_fs_28 ct_fw_800">{{ plan.slot_count }} </span>
                                         <span class="ct_text_para ct_fs_24 ct_fw_400">Slots</span>
-                                        <p class="ct_fw_500 ct_fs_14 ct_text_para mb-0">Enterprise volume
-                                            package</p>
+                                        <p [ngClass]="{'ct_fw_700 ct_text_primary': plan.slot_count === 170, 'ct_fw_500 ct_text_para': plan.slot_count !== 170}" class="ct_fs_14 mb-0">
+                                            {{ plan.slot_count === 170 ? 'Most Popular Choice' : (plan.slot_count <= 120 ? 'Standard dealership tier' : 'Enterprise volume package') }}
+                                        </p>
                                     </div>
                                     <div>
                                         <p class="ct_fs_12 ct_fw_700 ct_text_para mb-1">PRICE PER YEAR</p>
                                         <div class="d-flex justify-content-between flex-wrap gap-3">
-                                            <h3 class="ct_fs_20 ct_fw_700 ct_text_primary mb-0">CHF 299.50.–
-                                            </h3>
-                                            <div>
-                                                <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                    data-bs-target="#edit_slot_package_Modal">
-                                                    <svg width="31" height="31" viewBox="0 0 31 31" fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg">
-                                                        <path
-                                                            d="M9.66667 21.3333H10.8542L19 13.1875L17.8125 12L9.66667 20.1458V21.3333ZM8 23V19.4583L19 8.47917C19.1667 8.32639 19.3507 8.20833 19.5521 8.125C19.7535 8.04167 19.9653 8 20.1875 8C20.4097 8 20.625 8.04167 20.8333 8.125C21.0417 8.20833 21.2222 8.33333 21.375 8.5L22.5208 9.66667C22.6875 9.81944 22.809 10 22.8854 10.2083C22.9618 10.4167 23 10.625 23 10.8333C23 11.0556 22.9618 11.2674 22.8854 11.4688C22.809 11.6701 22.6875 11.8542 22.5208 12.0208L11.5417 23H8ZM21.3333 10.8333L20.1667 9.66667L21.3333 10.8333ZM18.3958 12.6042L17.8125 12L19 13.1875L18.3958 12.6042Z"
-                                                            fill="#919EAB" />
-                                                    </svg>
-                                                </a>
-                                                <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                    data-bs-target="#ct_delete_slot_modal_post"><svg width="30"
-                                                        height="31" viewBox="0 0 30 31" fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg">
-                                                        <path
-                                                            d="M10.5 23C10.0417 23 9.64931 22.8368 9.32292 22.5104C8.99653 22.184 8.83333 21.7917 8.83333 21.3333V10.5H8V8.83333H12.1667V8H17.1667V8.83333H21.3333V10.5H20.5V21.3333C20.5 21.7917 20.3368 22.184 20.0104 22.5104C19.684 22.8368 19.2917 23 18.8333 23H10.5ZM18.8333 10.5H10.5V21.3333H18.8333V10.5ZM12.1667 19.6667H13.8333V12.1667H12.1667V19.6667ZM15.5 19.6667H17.1667V12.1667H15.5V19.6667ZM10.5 10.5V21.3333V10.5Z"
-                                                            fill="#919EAB" />
-                                                    </svg>
-                                                </a>
-                                            </div>
+                                            <h3 class="ct_fs_20 ct_fw_700 ct_text_primary mb-0">CHF {{ stripCurrency(plan.price) }}.–</h3>
+                                            <!-- Triggers commented out -->
                                         </div>
                                     </div>
                                 </div>
@@ -602,4 +386,8 @@
             </div>
         </div>
     </div>
+</div>
+
+<div *ngIf="loading" class="ct_loader_main">
+    <div class="loader"></div>
 </div>

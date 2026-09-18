@@ -53,19 +53,22 @@ export class PrivateComponent {
         cancelButtonText: "No"
       }).then((result) => {
         if (result.isConfirmed) {
-          const formURlData = new URLSearchParams();
-          //console.log()
-          formURlData.set('user_id', row.id);
-          formURlData.set('role', 'buyer');
-          formURlData.set('isBlocked', '0');
-          this.service.post(`blocked1`, formURlData).subscribe({
+          const payload = {
+            user_id: row.id,
+            // role: 'buyer',
+            isBlocked: 0
+          };
+          this.service.post(`blocked`, payload).subscribe({
             next: (resp: any) => {
               this.toastr.success(resp.message);
               this.getAllPrivate();
+            },
+            error: (error) => {
+              this.toastr.error(error?.error?.message || 'Something went wrong!');
+              this.getAllPrivate();
             }
-          })
+          });
         } else {
-          //this.toastr.warning('Something went wrong!');
           this.getAllPrivate();
         }
       });
@@ -81,18 +84,22 @@ export class PrivateComponent {
         cancelButtonText: "No"
       }).then((result) => {
         if (result.isConfirmed) {
-          const formURlData = new URLSearchParams();
-          formURlData.set('user_id', row.id);
-          formURlData.set('role', 'buyer');
-          formURlData.set('isBlocked', '1');
-          this.service.post(`blocked1`, formURlData).subscribe({
+          const payload = {
+            user_id: row.id,
+            // role: 'buyer',
+            isBlocked: 1
+          };
+          this.service.post(`blocked`, payload).subscribe({
             next: (resp: any) => {
               this.toastr.success(resp.message);
               this.getAllPrivate();
+            },
+            error: (error) => {
+              this.toastr.error(error?.error?.message || 'Something went wrong!');
+              this.getAllPrivate();
             }
-          })
+          });
         } else {
-          //this.toastr.warning('Something went wrong!');
           this.getAllPrivate();
         }
       });

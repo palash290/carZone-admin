@@ -7,7 +7,6 @@
     </div>
     <div class="ct_inner_header_bg ct_mt_50 mb-5 ct_px_28">
         <div class="">
-            <!-- ==== recent Seller ====== -->
             <div class="ct_mt_45">
                 <div class="d-flex justify-content-between align-items-center ct_flex_col_575 gap-sm-5 gap-3">
                     <!-- Search -->
@@ -30,7 +29,6 @@
                                     d="M12.5833 0.5H0.5L4.30145 5.25183C4.53787 5.54733 4.66667 5.9145 4.66667 6.293V11.75C4.66667 12.2102 5.03975 12.5833 5.5 12.5833H7.58333C8.04358 12.5833 8.41667 12.2102 8.41667 11.75V6.293C8.41667 5.9145 8.5455 5.54733 8.78192 5.25183L12.5833 0.5Z"
                                     stroke="#919EAB" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
-
 
                             {{ selectedAccountType ? (selectedAccountType | titlecase) : 'User Type' }} <svg
                                 class="ms-2" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -57,17 +55,14 @@
                     </div>
                 </div>
 
-
                 <div class="ct_custom_table table-responsive mt-4">
                     <table class="table mb-0">
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>
-                                    User Name
-                                </th>
-                                <th> User Type</th>
-                                <th> Rating</th>
+                                <th>User Name</th>
+                                <th>User Type</th>
+                                <th>Rating</th>
                                 <th>Date</th>
                                 <th>Feedback</th>
                                 <th class="">Actions</th>
@@ -86,7 +81,7 @@
                                 </td>
                                 <td>{{ item.created_at | date:'MM/dd/yyyy' }}</td>
                                 <td>
-                                    <p class="mb-0 ct_overlay_text" [title]="item.message">{{ item.message }}</p>
+                                    <p class="mb-0 ct_overlay_text" [title]="item.message">{{ item.message || '-' }}</p>
                                 </td>
                                 <td class="">
                                     <div class="actions-cell d-flex gap-2">

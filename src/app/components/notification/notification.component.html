@@ -1,0 +1,258 @@
+<div class="main-content-wrapper">
+    <div class="ct_top_heading_box">
+        <h4 class="">Notifications</h4>
+        <p class="">
+            Manage and send notifications to users across the platform.
+        </p>
+    </div>
+
+    <div class="ct_inner_header_bg ct_mt_50 mb-5 ct_px_28">
+        <div class="ct_mt_45">
+            <!-- Options Bar -->
+            <div class="ct_notification_options_bar d-flex justify-content-center align-items-center gap-3 flex-wrap">
+                <div class="ct_custom_radio_btn" 
+                     [class.active]="selectedUserType === 'Both'" 
+                     (click)="selectUserType('Both')">
+                    <span class="ct_radio_dot" [class.checked]="selectedUserType === 'Both'"></span>
+                    <span class="ct_radio_text">Both</span>
+                </div>
+
+                <div class="ct_custom_radio_btn" 
+                     [class.active]="selectedUserType === 'Private'" 
+                     (click)="selectUserType('Private')">
+                    <span class="ct_radio_dot" [class.checked]="selectedUserType === 'Private'"></span>
+                    <span class="ct_radio_text">Private</span>
+                </div>
+
+                <div class="ct_custom_radio_btn" 
+                     [class.active]="selectedUserType === 'Company'" 
+                     (click)="selectUserType('Company')">
+                    <span class="ct_radio_dot" [class.checked]="selectedUserType === 'Company'"></span>
+                    <span class="ct_radio_text">Company</span>
+                </div>
+            </div>
+
+            <!-- Search & Actions Bar -->
+            <div class="d-flex justify-content-between align-items-center ct_flex_col_575 gap-3 mt-4">
+                <div class="search-box ct_width_100_575">
+                    <div class="input-group position-relative">
+                        <input type="text" class="form-control ct_input ps-5" placeholder="Search users..."
+                            [(ngModel)]="searchQuery" (ngModelChange)="fetchUsers()" />
+                        <i class="fas fa-search ct_show_left ct_text_para"></i>
+                    </div>
+                </div>
+
+                <div *ngIf="getSelectedCount() > 0" class="d-flex align-items-center gap-2">
+                    <span class="badge bg-danger fs-6 py-2 px-3">
+                        {{ getSelectedCount() }} Selected
+                    </span>
+                </div>
+            </div>
+
+            <!-- Users List Table / Card Rows -->
+            <div class="ct_users_notification_container mt-4">
+                <!-- Table Header -->
+                <div class="ct_users_list_header d-flex align-items-center">
+                    <div class="ct_col_select d-flex align-items-center gap-2">
+                        <input type="checkbox" class="form-check-input ct_checkbox" id="selectAllCheckbox"
+                            [checked]="isAllSelected" (change)="toggleSelectAll($event)">
+                        <label for="selectAllCheckbox" class="ct_header_label mb-0">All</label>
+                    </div>
+                    <div class="ct_col_username ct_header_label">User Name</div>
+                    <div class="ct_col_membername ct_header_label">Member Name</div>
+                    <div class="ct_col_email ct_header_label">Email</div>
+                </div>
+
+                <!-- Loading State -->
+                <div *ngIf="loading" class="text-center py-5">
+                    <div class="spinner-border ct_text_primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2 ct_text_para">Loading users...</p>
+                </div>
+
+                <!-- Empty State -->
+                <div *ngIf="!loading && usersList.length === 0" class="text-center py-5 bg-white ct_border_radius_12 mt-2">
+                    <i class="fas fa-users-slash fs-1 ct_text_para mb-3"></i>
+                    <h5 class="ct_fw_600">No Users Found</h5>
+                    <p class="ct_text_para">No accounts available for the selected category.</p>
+                </div>
+
+                <!-- User Row Cards -->
+                <div *ngIf="!loading && usersList.length > 0">
+                    <div *ngFor="let user of usersList | paginate: { itemsPerPage: 10, currentPage: p }; let i = index"
+                         class="ct_user_row_card d-flex align-items-center"
+                         [class.selected_row]="user.selected">
+                        <div class="ct_col_select">
+                            <input type="checkbox" class="form-check-input ct_checkbox"
+                                [(ngModel)]="user.selected"
+                                (ngModelChange)="onUserCheckboxChange()">
+                        </div>
+                        <div class="ct_col_username">
+                            <span class="ct_username_text">{{ user.fullName || user.userName || user.name || '-' }}</span>
+                        </div>
+                        <div class="ct_col_membername">
+                            <span class="ct_member_text">{{ user.memberName || user.member_name || user.fullName || user.name || '-' }}</span>
+                        </div>
+                        <div class="ct_col_email">
+                            <span class="ct_email_text">{{ user.email || '-' }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-2" *ngIf="!loading && usersList.length > 0">
+                    <div class="ct_text_para ct_fs_14">
+                        Showing {{ (p - 1) * 10 + 1 }} to {{ ((p * 10) > usersList.length) ? usersList.length : (p * 10) }} of {{ usersList.length }} users
+                    </div>
+                    <pagination-controls class="ct_pagination_div" (pageChange)="p = $event" [autoHide]="true"></pagination-controls>
+                </div>
+            </div>
+
+            <!-- Compose Subject & Message Section -->
+            <div class="ct_notification_compose_section mt-5 pt-2">
+                <!-- Subject Field -->
+                <div class="mb-4">
+                    <label class="form-label ct_form_label">Subject</label>
+                    <input type="text" class="form-control ct_subject_input" placeholder="Enter Subject"
+                        [(ngModel)]="subject" />
+                </div>
+
+                <!-- Message Field -->
+                <div class="mb-4">
+                    <label class="form-label ct_form_label">Message</label>
+
+                    <!-- Rich Text Toolbar -->
+                    <div class="ct_editor_toolbar d-flex align-items-center flex-wrap gap-1 mb-2">
+                        <button type="button" class="ct_tool_btn" title="Bold" (click)="formatText('bold')">
+                            <i class="fa-solid fa-bold"></i>
+                        </button>
+                        <button type="button" class="ct_tool_btn" title="Italic" (click)="formatText('italic')">
+                            <i class="fa-solid fa-italic"></i>
+                        </button>
+                        <button type="button" class="ct_tool_btn" title="Underline" (click)="formatText('underline')">
+                            <i class="fa-solid fa-underline"></i>
+                        </button>
+                        <button type="button" class="ct_tool_btn" title="Strikethrough" (click)="formatText('strikeThrough')">
+                            <i class="fa-solid fa-strikethrough"></i>
+                        </button>
+
+                        <span class="ct_toolbar_divider"></span>
+
+                        <button type="button" class="ct_tool_btn" title="Code" (click)="formatText('formatBlock', '<pre>')">
+                            <i class="fa-solid fa-code"></i>
+                        </button>
+
+                        <!-- Heading Dropdown -->
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="ct_tool_btn ct_heading_btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                Heading
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="javascript:void(0)" (click)="applyHeading('<h1>')">Heading 1</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0)" (click)="applyHeading('<h2>')">Heading 2</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0)" (click)="applyHeading('<h3>')">Heading 3</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0)" (click)="applyHeading('<p>')">Normal Paragraph</a></li>
+                            </ul>
+                        </div>
+
+                        <span class="ct_toolbar_divider"></span>
+
+                        <button type="button" class="ct_tool_btn" title="Insert Link" (click)="insertLink()">
+                            <i class="fa-solid fa-link"></i>
+                        </button>
+                        <!-- <button type="button" class="ct_tool_btn" title="Insert Image" (click)="insertImage()">
+                            <i class="fa-regular fa-image"></i>
+                        </button> -->
+
+                        <span class="ct_toolbar_divider"></span>
+
+                        <button type="button" class="ct_tool_btn" title="Text Color" (click)="formatText('foreColor', '#8F0C1F')">
+                            <span class="fw-bold text-decoration-underline">A</span>
+                        </button>
+                        <button type="button" class="ct_tool_btn" title="Highlight Color" (click)="formatText('hiliteColor', '#ffeb3b')">
+                            <i class="fa-solid fa-fill-drip"></i>
+                        </button>
+
+                        <span class="ct_toolbar_divider"></span>
+
+                        <button type="button" class="ct_tool_btn" title="Align Left" (click)="formatText('justifyLeft')">
+                            <i class="fa-solid fa-align-left"></i>
+                        </button>
+                        <button type="button" class="ct_tool_btn" title="Align Center" (click)="formatText('justifyCenter')">
+                            <i class="fa-solid fa-align-center"></i>
+                        </button>
+                        <button type="button" class="ct_tool_btn" title="Align Right" (click)="formatText('justifyRight')">
+                            <i class="fa-solid fa-align-right"></i>
+                        </button>
+                        <button type="button" class="ct_tool_btn" title="Justify" (click)="formatText('justifyFull')">
+                            <i class="fa-solid fa-align-justify"></i>
+                        </button>
+
+                        <span class="ct_toolbar_divider"></span>
+
+                        <button type="button" class="ct_tool_btn" title="Horizontal Line" (click)="formatText('insertHorizontalRule')">
+                            <i class="fa-solid fa-minus"></i>
+                        </button>
+                        <button type="button" class="ct_tool_btn" title="Clear Formatting" (click)="formatText('removeFormat')">
+                            <i class="fa-solid fa-text-slash"></i>
+                        </button>
+                        <button type="button" class="ct_tool_btn" title="Outdent" (click)="formatText('outdent')">
+                            <i class="fa-solid fa-outdent"></i>
+                        </button>
+                        <button type="button" class="ct_tool_btn" title="Indent" (click)="formatText('indent')">
+                            <i class="fa-solid fa-indent"></i>
+                        </button>
+
+                        <span class="ct_toolbar_divider"></span>
+
+                        <button type="button" class="ct_tool_btn" title="Superscript" (click)="formatText('superscript')">
+                            <span>x²</span>
+                        </button>
+                        <button type="button" class="ct_tool_btn" title="Subscript" (click)="formatText('subscript')">
+                            <span>x₂</span>
+                        </button>
+
+                        <span class="ct_toolbar_divider"></span>
+
+                        <button type="button" class="ct_tool_btn" title="Undo" (click)="formatText('undo')">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                        <button type="button" class="ct_tool_btn" title="Redo" (click)="formatText('redo')">
+                            <i class="fa-solid fa-rotate-right"></i>
+                        </button>
+                    </div>
+
+                    <!-- Editable Box with Emoji Button -->
+                    <div class="position-relative">
+                        <div #messageEditor class="form-control ct_message_editor"
+                             contenteditable="true"
+                             data-placeholder="Type Here..."
+                             (input)="onMessageInput($event)"></div>
+
+                        <!-- <button type="button" class="ct_editor_emoji_btn" (click)="toggleEmojiPicker()" title="Add Emoji">
+                            <i class="fa-regular fa-face-smile"></i>
+                        </button> -->
+
+                        <!-- Emoji Popover -->
+                        <!-- <div *ngIf="showEmojiPicker" class="ct_emoji_popover">
+                            <div class="d-flex flex-wrap gap-2">
+                                <span *ngFor="let emoji of emojis" class="ct_emoji_item" (click)="insertEmoji(emoji)">
+                                    {{ emoji }}
+                                </span>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+
+                <!-- Send Button -->
+                <div class="mt-4">
+                    <button type="button" class="btn ct_btn_send" (click)="sendNotification()" [disabled]="isSending">
+                        <span *ngIf="isSending" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                        Send
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

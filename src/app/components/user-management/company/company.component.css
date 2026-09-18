@@ -1,0 +1,28 @@
+.ct_company_reject_modal {
+  max-width: 760px;
+}
+
+.ct_text_editor_toolbar {
+  margin-bottom: 10px;
+}
+
+.ct_editor_btn {
+  border: 1px solid #d9d9d9;
+  background: #fff;
+  color: #333;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.ct_text_editor {
+  min-height: 180px;
+  height: auto !important;
+  overflow-y: auto;
+}
+
+.ct_text_editor:empty:before {
+  content: attr(data-placeholder);
+  color: #8c8c8c;
+}

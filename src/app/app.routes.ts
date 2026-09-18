@@ -99,6 +99,10 @@ export const routes: Routes = [
                         path: 'transactions',
                         loadComponent: () => import('./components/transactions/transactions.component').then(m => m.TransactionsComponent)
                   },
+                  {
+                        path: 'notification',
+                        loadComponent: () => import('./components/notification/notification.component').then(m => m.NotificationComponent)
+                  },
             ]
       }
 ];

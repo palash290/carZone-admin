@@ -1,0 +1,316 @@
+.ct_notification_options_bar {
+    background-color: #f4f6f8;
+    padding: 14px 20px;
+    border-radius: 10px;
+}
+
+.ct_custom_radio_btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #ffffff;
+    border: 1px solid #f0f0f0;
+    border-top: 3.5px solid var(--primary-color, #8F0C1F);
+    border-radius: 6px;
+    padding: 8px 20px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    user-select: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.ct_custom_radio_btn:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+.ct_radio_dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: inline-block;
+    border: 1.8px solid #d1d5db;
+    background-color: #ffffff;
+    transition: all 0.2s ease-in-out;
+    flex-shrink: 0;
+}
+
+.ct_radio_dot.checked {
+    background-color: var(--primary-color, #8F0C1F);
+    border-color: var(--primary-color, #8F0C1F);
+}
+
+.ct_radio_text {
+    font-size: 15px;
+    font-weight: 600;
+    color: #111827;
+    line-height: 1;
+}
+
+/* User List Container and Header */
+.ct_users_notification_container {
+    overflow-x: auto;
+    padding-bottom: 8px;
+}
+
+.ct_users_list_header {
+    padding: 12px 24px;
+    margin-bottom: 8px;
+    min-width: 650px;
+}
+
+.ct_header_label {
+    font-size: 15px;
+    font-weight: 700;
+    color: #111827;
+    user-select: none;
+}
+
+/* User Row Cards */
+.ct_user_row_card {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    padding: 14px 24px;
+    margin-bottom: 12px;
+    min-width: 650px;
+    transition: all 0.2s ease-in-out;
+}
+
+.ct_user_row_card:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.ct_user_row_card.selected_row {
+    border-color: var(--primary-color, #8F0C1F);
+    background-color: #fdf6f7;
+}
+
+/* Columns */
+.ct_col_select {
+    width: 80px;
+    flex-shrink: 0;
+}
+
+.ct_col_username {
+    flex: 1.2;
+    min-width: 150px;
+    padding-right: 15px;
+}
+
+.ct_col_membername {
+    flex: 1.2;
+    min-width: 150px;
+    padding-right: 15px;
+}
+
+.ct_col_email {
+    flex: 1.5;
+    min-width: 180px;
+    padding-right: 15px;
+}
+
+/* Checkbox */
+.ct_checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    border: 1.5px solid #d1d5db;
+    border-radius: 4px;
+    margin-top: 0;
+    accent-color: var(--primary-color, #8F0C1F);
+}
+
+.ct_checkbox:checked {
+    background-color: var(--primary-color, #8F0C1F);
+    border-color: var(--primary-color, #8F0C1F);
+}
+
+/* Text styles */
+.ct_username_text {
+    color: var(--primary-color, #8F0C1F);
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.ct_member_text {
+    color: #111827;
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.ct_email_text {
+    color: #111827;
+    font-size: 15px;
+    font-weight: 400;
+    word-break: break-all;
+}
+
+/* Compose Notification Section */
+.ct_notification_compose_section {
+    border-top: 1px solid #e5e7eb;
+}
+
+.ct_form_label {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 8px;
+    display: block;
+}
+
+/* Subject Input */
+.ct_subject_input {
+    height: 48px;
+    border: 1.5px solid var(--primary-color, #8F0C1F);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 15px;
+    color: #111827;
+    background-color: #ffffff;
+    outline: none;
+    box-shadow: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.ct_subject_input:focus {
+    border-color: var(--primary-color, #8F0C1F);
+    box-shadow: 0 0 0 3px rgba(143, 12, 31, 0.15);
+}
+
+/* Rich Text Toolbar */
+.ct_editor_toolbar {
+    padding: 6px 0;
+    border-bottom: 1px solid transparent;
+}
+
+.ct_tool_btn {
+    background: transparent;
+    border: none;
+    padding: 5px 8px;
+    border-radius: 4px;
+    color: #1f2937;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    line-height: 1.4;
+    transition: all 0.15s ease-in-out;
+}
+
+.ct_tool_btn:hover {
+    background-color: #f3f4f6;
+    color: var(--primary-color, #8F0C1F);
+}
+
+.ct_heading_btn {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.ct_toolbar_divider {
+    display: inline-block;
+    width: 1px;
+    height: 18px;
+    background-color: #e5e7eb;
+    margin: 0 4px;
+}
+
+/* Message Contenteditable Area */
+.ct_message_editor {
+    min-height: 85px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 12px 45px 12px 16px;
+    font-size: 15px;
+    color: #111827;
+    background-color: #ffffff;
+    outline: none;
+    line-height: 1.5;
+    transition: all 0.2s ease-in-out;
+}
+
+.ct_message_editor:empty:before {
+    content: attr(data-placeholder);
+    color: #9ca3af;
+    pointer-events: none;
+}
+
+.ct_message_editor:focus {
+    border-color: var(--primary-color, #8F0C1F);
+    box-shadow: 0 0 0 3px rgba(143, 12, 31, 0.15);
+}
+
+/* Emoji Trigger */
+.ct_editor_emoji_btn {
+    position: absolute;
+    right: 14px;
+    top: 12px;
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    color: #1f2937;
+    cursor: pointer;
+    transition: transform 0.15s ease-in-out, color 0.15s;
+}
+
+.ct_editor_emoji_btn:hover {
+    transform: scale(1.15);
+    color: var(--primary-color, #8F0C1F);
+}
+
+/* Emoji Popover */
+.ct_emoji_popover {
+    position: absolute;
+    right: 14px;
+    bottom: 100%;
+    margin-bottom: 8px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    z-index: 1050;
+    max-width: 280px;
+}
+
+.ct_emoji_item {
+    font-size: 22px;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    transition: all 0.15s;
+    user-select: none;
+}
+
+.ct_emoji_item:hover {
+    background-color: #f3f4f6;
+    transform: scale(1.2);
+}
+
+/* Send Button */
+.ct_btn_send {
+    background-color: var(--primary-color, #8F0C1F);
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 10px 52px;
+    border-radius: 6px;
+    border: none;
+    box-shadow: 0 2px 6px rgba(143, 12, 31, 0.25);
+    transition: all 0.2s ease-in-out;
+}
+
+.ct_btn_send:hover {
+    background-color: #720918;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(143, 12, 31, 0.35);
+}
+
+.ct_btn_send:disabled {
+    background-color: #e5a4ac;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}

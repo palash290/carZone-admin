@@ -20,8 +20,11 @@ export class CompanyComponent {
   status: any = '';
   p: any = 1;
   loading: boolean = false;
+  rejectSubject = '';
+  rejectReason = '';
   @ViewChild('closeModalAccept') closeModalAccept!: ElementRef;
   @ViewChild('closeModalReject') closeModalReject!: ElementRef;
+  @ViewChild('rejectReasonEditor') rejectReasonEditor!: ElementRef<HTMLDivElement>;
 
   constructor(private service: CommonService, private toastr: NzMessageService) { }
 
@@ -70,10 +73,25 @@ export class CompanyComponent {
   }
 
   reject() {
+    const subject = this.rejectSubject.trim();
+    const reason = this.rejectReason?.trim() || '';
+
+    if (!subject) {
+      this.toastr.warning('Please enter a subject.');
+      return;
+    }
+
+    if (!this.hasEditorContent(reason)) {
+      this.toastr.warning('Please enter a reason.');
+      return;
+    }
+
     this.loading = true;
     const formURlData = new URLSearchParams();
     formURlData.set('action', 'rejected');
     formURlData.set('planType', 'custom');
+    formURlData.set('subject', subject);
+    formURlData.set('html', reason);
     this.service.post(`rejectCompany/${this.companyId}`, formURlData.toString()).subscribe({
       next: (resp: any) => {
         if (resp.success == true) {
@@ -81,6 +99,7 @@ export class CompanyComponent {
           this.loading = false;
           this.getCompanyList();
           this.closeModalReject.nativeElement.click();
+          this.resetRejectForm();
         } else {
           this.toastr.warning(resp.message);
           this.loading = false;
@@ -102,6 +121,41 @@ export class CompanyComponent {
   getId(item: any) {
     // this.item = item;
     this.companyId = item.id;
+    this.resetRejectForm();
+  }
+
+  resetRejectForm() {
+    this.rejectSubject = '';
+    this.rejectReason = '';
+    if (this.rejectReasonEditor?.nativeElement) {
+      this.rejectReasonEditor.nativeElement.innerHTML = '';
+    }
+  }
+
+  hasEditorContent(value: string) {
+    if (!value) {
+      return false;
+    }
+
+    const textOnly = value
+      .replace(/<[^>]*>/g, ' ')
+      .replace(/&nbsp;/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    return textOnly.length > 0;
+  }
+
+  onReasonInput(event: Event) {
+    const editor = event.target as HTMLDivElement;
+    this.rejectReason = editor.innerHTML;
+  }
+
+  formatReason(command: string) {
+    document.execCommand(command, false);
+    if (this.rejectReasonEditor?.nativeElement) {
+      this.rejectReason = this.rejectReasonEditor.nativeElement.innerHTML;
+    }
   }
 
   handleCheckboxChange(row: any) {
@@ -122,7 +176,7 @@ export class CompanyComponent {
           formURlData.set('user_id', row.id);
           formURlData.set('role', 'buyer');
           formURlData.set('isBlocked', '0');
-          this.service.post(`blocked1`, formURlData).subscribe({
+          this.service.post(`blocked`, formURlData).subscribe({
             next: (resp: any) => {
               this.toastr.success(resp.message);
               this.getCompanyList();
@@ -149,7 +203,7 @@ export class CompanyComponent {
           formURlData.set('user_id', row.id);
           formURlData.set('role', 'buyer');
           formURlData.set('isBlocked', '1');
-          this.service.post(`blocked1`, formURlData).subscribe({
+          this.service.post(`blocked`, formURlData).subscribe({
             next: (resp: any) => {
               this.toastr.success(resp.message);
               this.getCompanyList();

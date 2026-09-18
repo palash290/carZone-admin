@@ -154,7 +154,7 @@
 </div>
 
 <div class="modal fade" id="userRejectedModal" tabindex="-1" aria-labelledby="ct_delete_postLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg ct_company_reject_modal">
         <div class="modal-content ct_border_radius_20">
             <div class="modal-body p-5 ">
                 <div class="ct_delete_post_modal">
@@ -163,7 +163,7 @@
                             <figcaption class=" ">
                                 <h4 class="ct_fs_24 ct_fw_600">Reject</h4>
                                 <p class="mb-0 ct_fw_500 ct_fs_16 ct_text_para">
-                                    Are you sure you want to reject this user?
+                                    Add a subject and reason before rejecting this company request.
                                 </p>
                             </figcaption>
                             <button type="button" class="btn-close ct_close_icon ct_text_grey" data-bs-dismiss="modal"
@@ -171,12 +171,43 @@
                             </button>
                         </div>
                     </figure>
-                    <div class="d-flex justify-content-end border-0 gap-3 ct_modal_footer ct_mt_32">
+                    <div class="mt-4">
+                        <label class="form-label ct_fw_500">Subject</label>
+                        <input type="text" class="form-control ct_input ct_inpu_h_44" placeholder="Enter subject"
+                            [(ngModel)]="rejectSubject" name="rejectSubject" />
+                    </div>
+                    <div class="mt-3">
+                        <label class="form-label ct_fw_500">Reason</label>
+                        <div class="ct_text_editor_toolbar d-flex flex-wrap gap-2 mb-2">
+                            <button type="button" class="ct_editor_btn" (click)="formatReason('bold')">
+                                Bold
+                            </button>
+                            <button type="button" class="ct_editor_btn" (click)="formatReason('italic')">
+                                Italic
+                            </button>
+                            <button type="button" class="ct_editor_btn" (click)="formatReason('underline')">
+                                Underline
+                            </button>
+                            <button type="button" class="ct_editor_btn" (click)="formatReason('insertUnorderedList')">
+                                Bullet List
+                            </button>
+                            <button type="button" class="ct_editor_btn" (click)="formatReason('insertOrderedList')">
+                                Numbered List
+                            </button>
+                            <button type="button" class="ct_editor_btn" (click)="formatReason('removeFormat')">
+                                Clear
+                            </button>
+                        </div>
+                        <div #rejectReasonEditor class="form-control ct_input ct_text_editor"
+                            contenteditable="true" data-placeholder="Write the rejection reason..."
+                            (input)="onReasonInput($event)"></div>
+                    </div>
+                    <div class="d-flex justify-content-end border-0 gap-3 ct_modal_footer ct_mt_32 flex-wrap">
                         <button #closeModalReject type="button" class="ct_h_40 ct_transparent_btn"
-                            data-bs-dismiss="modal">
+                            data-bs-dismiss="modal" (click)="resetRejectForm()">
                             Cancel
                         </button>
-                        <a class=" ct_h_40 ct_gradient_btn" data-bs-dismiss="modal" (click)="reject()">Yes</a>
+                        <button type="button" class="ct_h_40 ct_gradient_btn" (click)="reject()">Yes</button>
                     </div>
                 </div>
             </div>
