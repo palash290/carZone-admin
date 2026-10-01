@@ -1,0 +1,410 @@
+<div class="main-content-wrapper">
+    <!-- Top Heading -->
+    <div class="ct_top_heading_box">
+        <h4 class="ct_fs_24 ct_fw_700">Quality Seal Management</h4>
+        <p class="ct_fs_14 ct_text_para mb-0">
+            Create and manage vehicle inspection certificates, warranties, and quality seals.
+        </p>
+    </div>
+
+    <!-- Main Container -->
+    <div class="ct_inner_header_bg ct_mt_50 mb-5 ct_px_28">
+        <div>
+            <!-- Filters & Actions Header -->
+            <div class="ct_mt_45 mb-4">
+                <div class="d-flex justify-content-between align-items-center ct_flex_col_575 gap-md-4 gap-3">
+                    <!-- Search Input -->
+                    <div class="search-box flex-grow-1 ct_width_100_575" style="max-width: 380px;">
+                        <div class="input-group position-relative">
+                            <input type="text" class="form-control ct_input ps-5"
+                                placeholder="Search quality seals..." [(ngModel)]="searchQuery"
+                                (input)="onSearchChange()" />
+                            <i class="fas fa-search ct_show_left ct_text_para"></i>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-3 ct_flex_col_575 ct_w_100_575">
+                        <!-- Status Filter -->
+                        <div class="dropdown ct_w_100_575">
+                            <select class="form-select ct_input ct_status_filter" [(ngModel)]="statusFilter"
+                                (change)="onStatusFilterChange()">
+                                <option value="">All Statuses</option>
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
+                            </select>
+                        </div>
+
+                        <!-- Add Seal Button -->
+                        <button type="button" class="ct_gradient_btn text-nowrap ct_w_100_575"
+                            data-bs-toggle="modal" data-bs-target="#add_seal_Modal" (click)="openAddModal()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg" class="me-1">
+                                <path d="M12 5V19M5 12H19" stroke="white" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                            Add Quality Seal
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div *ngIf="loading" class="text-center py-5">
+                <div class="spinner-border ct_text_primary" role="status" style="width: 3rem; height: 3rem;">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-3 ct_text_para ct_fs_16">Loading Quality Seals...</p>
+            </div>
+
+            <!-- Empty State -->
+            <div *ngIf="!loading && sealsList.length === 0" class="text-center py-5 bg-white rounded-3 my-4 border">
+                <div class="empty-icon-box mb-3">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
+                            stroke="#D1D5DB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </div>
+                <h4 class="ct_fs_18 ct_fw_600 mb-1">No Quality Seals Found</h4>
+                <p class="ct_fs_14 ct_text_para mb-3">
+                    {{ searchQuery || statusFilter ? 'Try clearing your filters to see more results.' : 'Get started by creating your first quality seal.' }}
+                </p>
+                <button *ngIf="!searchQuery && !statusFilter" type="button" class="ct_gradient_btn btn-sm px-4"
+                    data-bs-toggle="modal" data-bs-target="#add_seal_Modal" (click)="openAddModal()">
+                    <i class="fa-solid fa-plus me-2"></i> Add Quality Seal
+                </button>
+                <button *ngIf="searchQuery || statusFilter" type="button" class="ct_transparent_btn btn-sm px-4"
+                    (click)="searchQuery = ''; statusFilter = ''; onSearchChange()">
+                    Clear Filters
+                </button>
+            </div>
+
+            <!-- Quality Seals Grid -->
+            <div *ngIf="!loading && sealsList.length > 0" class="row gy-4">
+                <div class="col-xl-3 col-lg-4 col-md-6"
+                    *ngFor="let seal of sealsList | paginate: { itemsPerPage: limit, currentPage: p, totalItems: totalCount }">
+                    <div class="emblem-mngmnt-card position-relative d-flex flex-column justify-content-between">
+                        <!-- Top header with logo & status badge -->
+                        <div>
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div class="ct_seal_img_box">
+                                    <img [src]="getImageUrl(seal.image || seal.imageUrl || seal.logo)"
+                                        [alt]="seal.name" (error)="$any($event.target).src = 'img/logo/ch_cars_sellers_logo.png'" />
+                                </div>
+                                <span class="badge cursor-pointer"
+                                    [ngClass]="seal.status === 1 || seal.status === '1' ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-secondary-subtle text-secondary border border-secondary-subtle'"
+                                    (click)="toggleStatus(seal, $event)"
+                                    [title]="'Click to ' + (seal.status === 1 || seal.status === '1' ? 'deactivate' : 'activate')">
+                                    <i class="fa-solid fa-circle me-1" style="font-size: 8px;"></i>
+                                    {{ seal.status === 1 || seal.status === '1' ? 'Active' : 'Inactive' }}
+                                </span>
+                            </div>
+
+                            <!-- Seal Name & Description -->
+                            <h3 class="ct_fs_18 ct_fw_600 mb-2 text-truncate" [title]="seal.name">
+                                {{ seal.name }}
+                            </h3>
+                            <p class="ct_fs_14 ct_fw_400 ct_text_para ct_seal_desc mb-3"
+                                [title]="seal.description || ''">
+                                {{ seal.description || 'No description provided.' }}
+                            </p>
+                        </div>
+
+                        <!-- Card Action Buttons -->
+                        <div class="d-flex align-items-center justify-content-between pt-3 border-top gap-2">
+                            <!-- View Details -->
+                            <a class="ct_action_link" href="javascript:void(0)" data-bs-toggle="modal"
+                                data-bs-target="#view_seal_Modal" (click)="viewSealDetails(seal)">
+                                <i class="fa-regular fa-eye me-1"></i> View
+                            </a>
+
+                            <div class="d-flex align-items-center gap-3">
+                                <!-- Edit -->
+                                <a class="ct_action_link text-primary" href="javascript:void(0)" data-bs-toggle="modal"
+                                    data-bs-target="#edit_seal_Modal" (click)="openEditModal(seal)">
+                                    <svg width="15" height="15" viewBox="0 0 17 17" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M13.8125 8.5C13.8125 8.3591 13.8685 8.22398 13.9681 8.12435C14.0677 8.02472 14.2029 7.96875 14.3438 7.96875C14.4846 7.96875 14.6198 8.02472 14.7194 8.12435C14.819 8.22398 14.875 8.3591 14.875 8.5V14.3438C14.875 14.4846 14.819 14.6198 14.7194 14.7194C14.6198 14.819 14.4846 14.875 14.3438 14.875H2.65625C2.51535 14.875 2.38023 14.819 2.2806 14.7194C2.18097 14.6198 2.125 14.4846 2.125 14.3438V2.65625C2.125 2.51535 2.18097 2.38023 2.2806 2.2806C2.38023 2.18097 2.51535 2.125 2.65625 2.125H8.5C8.6409 2.125 8.77602 2.18097 8.87565 2.2806C8.97528 2.38023 9.03125 2.51535 9.03125 2.65625C9.03125 2.79715 8.97528 2.93227 8.87565 3.0319C8.77602 3.13153 8.6409 3.1875 8.5 3.1875H3.1875V13.8125H13.8125V8.5Z"
+                                            fill="#919EAB" />
+                                        <path
+                                            d="M7.80396 9.20025L8.68052 9.07574L14.0627 3.69185C14.1161 3.64353 14.159 3.58487 14.189 3.51945C14.219 3.45402 14.2354 3.38319 14.2371 3.31124C14.2389 3.2393 14.226 3.16775 14.1993 3.10092C14.1726 3.0341 14.1326 2.97341 14.0817 2.92252C14.0308 2.87163 13.9701 2.83161 13.9033 2.80489C13.8365 2.77817 13.7649 2.76531 13.693 2.76708C13.621 2.76885 13.5502 2.78522 13.4848 2.8152C13.4193 2.84517 13.3607 2.88813 13.3124 2.94146L7.92681 8.32369L7.8023 9.20025H7.80396ZM14.8165 2.18775C14.9645 2.33575 15.082 2.51148 15.1622 2.7049C15.2423 2.89832 15.2836 3.10563 15.2836 3.31499C15.2836 3.52436 15.2423 3.73167 15.1622 3.92509C15.082 4.11851 14.9645 4.29424 14.8165 4.44224L9.3064 9.9523C9.22501 10.0333 9.11959 10.0857 9.00591 10.1017L7.25279 10.3541C7.17116 10.3657 7.08793 10.3582 7.0097 10.3321C6.93148 10.306 6.86039 10.2621 6.80208 10.2038C6.74378 10.1455 6.69984 10.0744 6.67376 9.99617C6.64768 9.91794 6.64016 9.83472 6.65181 9.75308L6.90084 7.99996C6.91698 7.88549 6.97002 7.7794 7.05191 7.69781L12.5636 2.18941C12.8625 1.89085 13.2676 1.72314 13.69 1.72314C14.1125 1.72314 14.5176 1.89085 14.8165 2.18941V2.18775Z"
+                                            fill="currentColor" />
+                                    </svg>
+                                    Edit
+                                </a>
+
+                                <!-- Delete -->
+                                <a class="ct_action_link text-danger" href="javascript:void(0)"
+                                    (click)="deleteQualitySeal(seal)">
+                                    <svg width="15" height="15" viewBox="0 0 17 17" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M3.31931 4.40097L4.81602 13.4414C4.88448 13.8553 5.09764 14.2314 5.41753 14.5028C5.73743 14.7742 6.14327 14.9232 6.56277 14.9233H8.93427M13.6787 4.40097L12.1827 13.4414C12.1142 13.8553 11.9011 14.2314 11.5812 14.5028C11.2613 14.7742 10.8554 14.9232 10.4359 14.9233H8.06443M7.09827 7.87393V11.4503M9.90043 7.87393V11.4503M1.94727 4.40097H15.0514M10.4664 4.40097V3.14014C10.4664 2.85834 10.3544 2.58809 10.1552 2.38884C9.95593 2.18958 9.68568 2.07764 9.40389 2.07764H7.59481C7.31301 2.07764 7.04276 2.18958 6.84351 2.38884C6.64425 2.58809 6.53231 2.85834 6.53231 3.14014V4.40097H10.4664Z"
+                                            stroke="currentColor" stroke-width="1.0625" stroke-linecap="round"
+                                            stroke-linejoin="round" />
+                                    </svg>
+                                    Delete
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div *ngIf="!loading && sealsList.length > 0" class="pagination-section d-flex justify-content-between align-items-center flex-wrap gap-3 mt-4">
+                <p class="ct_fs_14 ct_text_para mb-0">
+                    Showing {{ (p - 1) * limit + 1 }} to {{ (p * limit) > totalCount ? totalCount : (p * limit) }} of {{ totalCount }} Quality Seals
+                </p>
+                <pagination-controls class="ct_pagination_div" (pageChange)="onPageChange($event)" [responsive]="true"
+                    previousLabel="Previous" nextLabel="Next">
+                </pagination-controls>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== ADD QUALITY SEAL MODAL ==================== -->
+<div class="modal fade" id="add_seal_Modal" tabindex="-1" aria-labelledby="add_seal_ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 650px;">
+        <div class="modal-content ct_border_radius_12">
+            <div class="modal-header border-bottom">
+                <h1 class="modal-title ct_fs_20 ct_fw_700 ct_font_cairo" id="add_seal_ModalLabel">
+                    Add Quality Seal
+                </h1>
+                <button #closeAddModalBtn type="button" class="btn-close ct_focus_none ct_text_grey"
+                    data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body ct_body_bg ct_px_32 ct_py_24">
+                <div class="row">
+                    <!-- Name -->
+                    <div class="col-12">
+                        <div class="form-group mb-4">
+                            <label class="ct_form_label mb-2">Quality Seal Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control ct_input"
+                                placeholder="e.g., TCS Occasion Garantie" [(ngModel)]="addName" />
+                        </div>
+                    </div>
+
+                    <!-- Image Upload -->
+                    <div class="col-12">
+                        <div class="ct_upload_wrapper mb-4">
+                            <label class="ct_form_label mb-2">Quality Seal Logo / Image <span class="text-danger">*</span></label>
+
+                            <!-- Dropzone (Shown when no preview) -->
+                            <div *ngIf="!addImagePreview" class="ct_upload_box">
+                                <input #addFileInput type="file" accept="image/*" (change)="onAddFileSelected($event)" />
+                                <div class="ct_img_upload_icon mx-auto mb-2">
+                                    <svg width="28" height="20" viewBox="0 0 28 20" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M8.5 17.5C7.05227 17.5 5.81534 17.0078 4.7892 16.0234C3.76307 15.0391 3.25 13.8359 3.25 12.4141C3.25 11.1953 3.62386 10.1094 4.37159 9.15625C5.11932 8.20312 6.09773 7.59375 7.30682 7.32812C7.70455 5.89062 8.5 4.72656 9.69318 3.83594C10.8864 2.94531 12.2386 2.5 13.75 2.5C15.6114 2.5 17.1903 3.13672 18.4869 4.41016C19.7835 5.68359 20.4318 7.23438 20.4318 9.0625C21.5295 9.1875 22.4403 9.65234 23.1642 10.457C23.8881 11.2617 24.25 12.2031 24.25 13.2812C24.25 14.4531 23.8324 15.4492 22.9972 16.2695C22.1619 17.0898 21.1477 17.5 19.9545 17.5H14.7045C14.1795 17.5 13.7301 17.3164 13.3562 16.9492C12.9824 16.582 12.7955 16.1406 12.7955 15.625V10.7969L11.2682 12.25L9.93182 10.9375L13.75 7.1875L17.5682 10.9375L16.2318 12.25L14.7045 10.7969V15.625H19.9545C20.6227 15.625 21.1875 15.3984 21.6489 14.9453C22.1102 14.4922 22.3409 13.9375 22.3409 13.2812C22.3409 12.625 22.1102 12.0703 21.6489 11.6172C21.1875 11.1641 20.6227 10.9375 19.9545 10.9375H18.5227V9.0625C18.5227 7.76562 18.0574 6.66016 17.1267 5.74609C16.196 4.83203 15.0705 4.375 13.75 4.375C12.4295 4.375 11.304 4.83203 10.3733 5.74609C9.44261 6.66016 8.97727 7.76562 8.97727 9.0625H8.5C7.57727 9.0625 6.78977 9.38281 6.1375 10.0234C5.48523 10.6641 5.15909 11.4375 5.15909 12.3438C5.15909 13.25 5.48523 14.0234 6.1375 14.6641C6.78977 15.3047 7.57727 15.625 8.5 15.625H10.8864V17.5H8.5Z"
+                                            fill="#8F0C1F" />
+                                    </svg>
+                                </div>
+                                <h5 class="ct_upload_text ct_fw_500 ct_fs_14 mb-1">
+                                    Click to upload or drag & drop
+                                </h5>
+                                <p class="ct_upload_info mb-0 ct_fs_12 ct_fw_400 ct_text_para">
+                                    PNG, JPG, SVG, WebP (Max 5MB)
+                                </p>
+                            </div>
+
+                            <!-- Preview Box -->
+                            <div *ngIf="addImagePreview" class="p-3 bg-white border rounded-3 d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="ct_preview_box">
+                                        <img [src]="addImagePreview" alt="Seal Preview" class="img-fluid" />
+                                    </div>
+                                    <div>
+                                        <p class="ct_fs_14 ct_fw_500 mb-0">{{ addImageFile?.name }}</p>
+                                        <span class="ct_fs_12 ct_text_para">{{ ((addImageFile?.size || 0) / 1024).toFixed(1) }} KB</span>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeAddImage()">
+                                    <i class="fa-solid fa-trash-can me-1"></i> Remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="col-12">
+                        <div class="form-group mb-2">
+                            <label class="ct_form_label mb-2">Description</label>
+                            <textarea rows="4" class="form-control ct_input"
+                                placeholder="Briefly describe what this quality seal represents..."
+                                [(ngModel)]="addDescription"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer border-top py-3">
+                <button type="button" class="ct_transparent_btn" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="ct_gradient_btn" [disabled]="submitting" (click)="createQualitySeal()">
+                    <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2" role="status"></span>
+                    {{ submitting ? 'Creating...' : 'Create Quality Seal' }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== EDIT QUALITY SEAL MODAL ==================== -->
+<div class="modal fade" id="edit_seal_Modal" tabindex="-1" aria-labelledby="edit_seal_ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 650px;">
+        <div class="modal-content ct_border_radius_12">
+            <div class="modal-header border-bottom">
+                <h1 class="modal-title ct_fs_20 ct_fw_700 ct_font_cairo" id="edit_seal_ModalLabel">
+                    Edit Quality Seal
+                </h1>
+                <button #closeEditModalBtn type="button" class="btn-close ct_focus_none ct_text_grey"
+                    data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body ct_body_bg ct_px_32 ct_py_24">
+                <div class="row">
+                    <!-- Name -->
+                    <div class="col-md-8">
+                        <div class="form-group mb-4">
+                            <label class="ct_form_label mb-2">Quality Seal Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control ct_input"
+                                placeholder="e.g., TCS Occasion Garantie" [(ngModel)]="editName" />
+                        </div>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="col-md-4">
+                        <div class="form-group mb-4">
+                            <label class="ct_form_label mb-2">Status</label>
+                            <select class="form-select ct_input" [(ngModel)]="editStatus">
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Image Section -->
+                    <div class="col-12">
+                        <div class="ct_upload_wrapper mb-4">
+                            <label class="ct_form_label mb-2">Quality Seal Logo / Image</label>
+
+                            <!-- Existing / New Image Preview Area -->
+                            <div class="p-3 bg-white border rounded-3 mb-3 d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="ct_preview_box">
+                                        <img [src]="editImagePreview ? editImagePreview : getImageUrl(editExistingImage)"
+                                            alt="Current Logo" class="img-fluid" (error)="$any($event.target).src = 'img/logo/ch_cars_sellers_logo.png'" />
+                                    </div>
+                                    <div>
+                                        <p class="ct_fs_14 ct_fw_500 mb-0">
+                                            {{ editImageFile ? editImageFile.name : (editExistingImage ? 'Current Seal Logo' : 'No Logo Uploaded') }}
+                                        </p>
+                                        <span class="ct_fs_12 ct_text_para">
+                                            {{ editImageFile ? (((editImageFile.size || 0) / 1024).toFixed(1) + ' KB (New)') : 'Active Logo' }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <button *ngIf="editImagePreview" type="button" class="btn btn-sm btn-outline-danger" (click)="removeEditImage()">
+                                    <i class="fa-solid fa-rotate-left me-1"></i> Reset
+                                </button>
+                            </div>
+
+                            <!-- Upload New Image input -->
+                            <div class="ct_upload_box">
+                                <input #editFileInput type="file" accept="image/*" (change)="onEditFileSelected($event)" />
+                                <h5 class="ct_upload_text ct_fw_500 ct_fs_14 mb-1">
+                                    Click here or drag & drop to replace logo
+                                </h5>
+                                <p class="ct_upload_info mb-0 ct_fs_12 ct_fw_400 ct_text_para">
+                                    PNG, JPG, SVG, WebP (Leave untouched to keep current)
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="col-12">
+                        <div class="form-group mb-2">
+                            <label class="ct_form_label mb-2">Description</label>
+                            <textarea rows="4" class="form-control ct_input"
+                                placeholder="Briefly describe what this quality seal represents..."
+                                [(ngModel)]="editDescription"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer border-top py-3">
+                <button type="button" class="ct_transparent_btn" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="ct_gradient_btn" [disabled]="submitting" (click)="updateQualitySeal()">
+                    <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2" role="status"></span>
+                    {{ submitting ? 'Saving...' : 'Save Changes' }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== VIEW QUALITY SEAL MODAL ==================== -->
+<div class="modal fade" id="view_seal_Modal" tabindex="-1" aria-labelledby="view_seal_ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 580px;">
+        <div class="modal-content ct_border_radius_12" *ngIf="selectedSeal">
+            <div class="modal-header border-bottom">
+                <h1 class="modal-title ct_fs_20 ct_fw_700 ct_font_cairo" id="view_seal_ModalLabel">
+                    Quality Seal Details
+                </h1>
+                <button type="button" class="btn-close ct_focus_none ct_text_grey" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body ct_body_bg ct_px_32 ct_py_24">
+                <div class="text-center mb-4">
+                    <div class="ct_view_seal_img_box mx-auto mb-3">
+                        <img [src]="getImageUrl(selectedSeal.image || selectedSeal.imageUrl || selectedSeal.logo)"
+                            [alt]="selectedSeal.name" (error)="$any($event.target).src = 'img/logo/ch_cars_sellers_logo.png'" />
+                    </div>
+                    <h3 class="ct_fs_22 ct_fw_700 mb-1">{{ selectedSeal.name }}</h3>
+                    <span class="badge"
+                        [ngClass]="selectedSeal.status === 1 || selectedSeal.status === '1' ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-secondary-subtle text-secondary border border-secondary-subtle'">
+                        <i class="fa-solid fa-circle me-1" style="font-size: 8px;"></i>
+                        {{ selectedSeal.status === 1 || selectedSeal.status === '1' ? 'Active Quality Seal' : 'Inactive Quality Seal' }}
+                    </span>
+                </div>
+
+                <div class="bg-white p-3 rounded-3 border mb-3">
+                    <label class="ct_fs_12 ct_fw_600 text-uppercase ct_text_para mb-1">Description</label>
+                    <p class="ct_fs_15 mb-0" style="white-space: pre-wrap;">
+                        {{ selectedSeal.description || 'No description provided.' }}
+                    </p>
+                </div>
+
+                <div class="row g-2 text-center" *ngIf="selectedSeal.createdAt || selectedSeal.id">
+                    <div class="col-6" *ngIf="selectedSeal.id">
+                        <div class="bg-white p-2 rounded-2 border">
+                            <span class="ct_fs_12 ct_text_para d-block">Seal ID</span>
+                            <strong class="ct_fs_14">#{{ selectedSeal.id }}</strong>
+                        </div>
+                    </div>
+                    <div class="col-6" *ngIf="selectedSeal.createdAt">
+                        <div class="bg-white p-2 rounded-2 border">
+                            <span class="ct_fs_12 ct_text_para d-block">Created On</span>
+                            <strong class="ct_fs_14">{{ selectedSeal.createdAt | date:'mediumDate' }}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer border-top py-3">
+                <button type="button" class="ct_transparent_btn" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="ct_gradient_btn" data-bs-toggle="modal" data-bs-target="#edit_seal_Modal"
+                    (click)="openEditModal(selectedSeal)">
+                    <i class="fa-regular fa-pen-to-square me-1"></i> Edit Quality Seal
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

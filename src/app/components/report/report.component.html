@@ -90,7 +90,7 @@
                                 <td>{{ item.created_at | date:'MM/dd/yyyy' }}</td>
                                 <td>
                                     <span [ngClass]="{
-                                        'ct_text_green': item.status === 'completed',
+                                        'ct_text_green': item.status === 'completed' || item.status === 'approved',
                                         'ct_text_yellow': item.status === 'pending',
                                         'ct_text_red': item.status === 'rejected' || item.status === 'cancelled',
                                         'ct_text_blue': item.status === 'confirmed'

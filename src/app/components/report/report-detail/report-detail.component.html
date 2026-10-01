@@ -21,7 +21,13 @@
                             <p class="ct_text_para mb-0">{{ reportData.email }}</p>
                         </div>
                     </div>
-                    <div class=""> <button class="btn-status ct_pending text-uppercase">Status: Pending </button></div>
+                    <div class="">
+                        <button class="btn-status text-uppercase" [ngClass]="{
+                            'ct_approved': reportData.status === 'approved' || reportData.status === 'completed' || reportData.status === 'confirmed',
+                            'ct_pending': reportData.status === 'pending' || !reportData.status,
+                            'ct_rejected': reportData.status === 'rejected' || reportData.status === 'cancelled'
+                        }">Status: {{ reportData.status || 'Pending' }}</button>
+                    </div>
                 </div>
                 <div class="mb-5">
                     <div class="ct_fw_500 ct_fs_16 mb-2">

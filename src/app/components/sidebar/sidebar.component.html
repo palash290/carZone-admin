@@ -214,6 +214,18 @@
                 Reported Listings
             </a>
         </li>
+
+        <li routerLink="/home/seal-management">
+            <a [ngClass]="{ 'active': isActive('/home/seal-management')}">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
+                        stroke="#919EAB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                Quality Seal Management
+            </a>
+        </li>
+
         <li routerLink="/home/emblem-management">
             <a [ngClass]="{ 'active': isActive('/home/emblem-management')}">
                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -233,6 +245,7 @@
                 Emblem Management
             </a>
         </li>
+
         <li routerLink="/home/transactions">
             <a [ngClass]="{ 'active': isActive('/home/transactions')}">
                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -88,6 +88,10 @@ export const routes: Routes = [
                         loadComponent: () => import('./components/emblem-management/emblem-management.component').then(m => m.EmblemManagementComponent)
                   },
                   {
+                        path: 'seal-management',
+                        loadComponent: () => import('./components/seal-management/seal-management.component').then(m => m.SealManagementComponent)
+                  },
+                  {
                         path: 'edit-profile',
                         loadComponent: () => import('./components/edit-profile/edit-profile.component').then(m => m.EditProfileComponent)
                   },
